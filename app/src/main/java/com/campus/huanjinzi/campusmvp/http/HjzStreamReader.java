@@ -25,7 +25,7 @@ public class HjzStreamReader {
 
         while ((len = reader.read(buf)) != -1) {
             sb.append(buf, 0, len);
-            // TODO: 2016/8/10 进度读取，不需要知道返回值的长度 
+            // TODO: 2016/8/10 进度读取，需要知道返回值的长度
         }
         return sb;
     }
