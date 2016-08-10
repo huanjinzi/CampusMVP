@@ -8,6 +8,6 @@ import java.io.InputStream;
 public interface IHjzStreamReader {
 
     /*从流中读取字符串*/
-    String getString(InputStream in);
+    String getString(InputStream in) throws Exception;
 
 }
