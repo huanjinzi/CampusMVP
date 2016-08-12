@@ -5,7 +5,7 @@ import java.util.UUID;
 /**
  * Created by huanjinzi on 2016/8/12.
  */
-public class Student {
+public final class Student {
 
     private String name = null;//姓名
     private String student_id = null;//学号
@@ -19,15 +19,17 @@ public class Student {
     private String birthday = null;//生日
     private int intoscore = -1;//入学分数
     private int credit = -1;//已获学分
-    private final String netusername;//校园网账号
-    private String netpassword;//校园网密码
+    private String netusername = null;//校园网账号
+    private String netpassword = null;//校园网密码
     private String mUUID;//唯一码
 
-    public Student(String swunetusername, String swunetpassword) {
+    public void setNetusername(String netusername) {
+        this.netusername = netusername;
+    }
+
+    public Student() {
 
         mUUID = UUID.randomUUID().toString();
-        netusername = swunetusername;
-        netpassword = swunetpassword;
     }
 
     public void setName(String name) {
@@ -144,6 +146,11 @@ public class Student {
 
     public int getCredit() {
         return credit;
+    }
+
+    @Override
+    public String toString() {
+        return netusername + name;
     }
 
 
