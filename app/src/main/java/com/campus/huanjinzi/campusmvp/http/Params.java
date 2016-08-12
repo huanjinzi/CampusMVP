@@ -7,7 +7,6 @@ public class Params {
 
     private String url = null;
     private String form = null;//请求提交的表单
-    private String cookie = null;
 
     public String getUrl() {
         return url;
@@ -25,11 +24,5 @@ public class Params {
         this.form = form;
     }
 
-    public String getCookie() {
-        return cookie;
-    }
 
-    public void setCookie(String cookie) {
-        this.cookie = cookie;
-    }
 }
