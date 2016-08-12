@@ -15,6 +15,7 @@ public class HjzHttp implements IHjzHttp {
 
 
     private HashMap<String, HttpCookie> cookiemap;
+    private int mContentlenth = -1;
     private String domain = null;
     private String hostname = null;
     private int i = 1;
@@ -47,7 +48,7 @@ public class HjzHttp implements IHjzHttp {
                     if (hostname.contains(domain)) {
                         cookie = cookiemap.get(domain);
                         StringBuilder sb = new StringBuilder();
-                        sb.append(cookie.getName() + "=" + cookie.getValue() + "\\n");
+                        sb.append(cookie.getName() + "=" + cookie.getValue() + ";");
 
                         cookie = cookiemap.get(hostname);
                         sb.append(cookie.getName() + "=" + cookie.getValue());
@@ -155,6 +156,7 @@ public class HjzHttp implements IHjzHttp {
                 System.out.println(key + "=" + con.getHeaderFields().get(key));
             }
             /*是否存在cookie*/
+            mContentlenth = con.getContentLength();
             if (con.getHeaderFields().get("Set-Cookie") != null) {
                 //cookie存在，获取cookie
                 HttpCookie httpcookie = HttpCookie.parse(con.getHeaderFields().get("Set-Cookie").get(0)).get(0);
@@ -175,5 +177,9 @@ public class HjzHttp implements IHjzHttp {
         }
 
         return in;
+    }
+
+    public int getContentLenth() {
+        return mContentlenth;
     }
 }
