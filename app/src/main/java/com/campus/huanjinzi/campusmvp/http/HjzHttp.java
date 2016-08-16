@@ -20,7 +20,14 @@ public class HjzHttp implements IHjzHttp {
     private String hostname = null;
     private int i = 1;
 
-    public HjzHttp() {
+    private static HjzHttp ourinstance = new HjzHttp();
+
+    // TODO: 2016/8/14 实现HjzHttp对象的管理（类似线程池），单例模式存在线程安全问题，加锁会影响多线程性能 
+    public static HjzHttp getInstance() {
+        return ourinstance;
+    }
+
+    private HjzHttp() {
 
         cookiemap = new HashMap<>();
         HttpURLConnection.setFollowRedirects(false);
@@ -63,8 +70,8 @@ public class HjzHttp implements IHjzHttp {
             }
 
             con.setRequestMethod("POST");
-            con.setReadTimeout(4 * 1000);
-            con.setConnectTimeout(6 * 1000);
+            con.setReadTimeout(3 * 1000);
+            con.setConnectTimeout(3 * 1000);
 
             con.setDoOutput(true);
             con.setDoInput(true);
@@ -138,8 +145,8 @@ public class HjzHttp implements IHjzHttp {
         }
 
         con.setRequestMethod("GET");
-        con.setReadTimeout(10 * 1000);
-        con.setConnectTimeout(10 * 1000);
+        con.setReadTimeout(3 * 1000);
+        con.setConnectTimeout(3 * 1000);
 
         con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36");
         con.setRequestProperty("Accept-Encoding", "gzip,deflate,sdch");

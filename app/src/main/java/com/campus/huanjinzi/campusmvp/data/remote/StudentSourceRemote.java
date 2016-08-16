@@ -1,11 +1,12 @@
-package com.campus.huanjinzi.campusmvp.http.data.remote;
+package com.campus.huanjinzi.campusmvp.data.remote;
 
 import com.campus.huanjinzi.campusmvp.http.HjzHttp;
 import com.campus.huanjinzi.campusmvp.http.HjzStreamReader;
 import com.campus.huanjinzi.campusmvp.http.Params;
-import com.campus.huanjinzi.campusmvp.http.data.StudentSource;
+import com.campus.huanjinzi.campusmvp.data.StudentSource;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,12 +16,20 @@ import java.util.regex.Pattern;
  */
 public class StudentSourceRemote implements StudentSource {
 
+    private static StudentSourceRemote ourInstance = new StudentSourceRemote();
+    private Params params = new Params();
+
+    public static StudentSourceRemote getInstance() {
+        return ourInstance;
+    }
+
+    private StudentSourceRemote() {
+    }
     @Override
     public HashMap<String, String> getBaseInfoMap(String username, String password) throws Exception {
 
         HashMap<String, String> map = null;
-        HjzHttp hjz = new HjzHttp();
-        Params params = new Params();
+        HjzHttp hjz = HjzHttp.getInstance();
         params.setUrl("http://urp.swu.edu.cn/userPasswordValidate.portal");
         String form = "Login.Token1=" + username + "&Login.Token2=" + password + "&" +
                 "goto=http://urp.swu.edu.cn/loginSuccess.portal&" +
@@ -72,5 +81,19 @@ public class StudentSourceRemote implements StudentSource {
                 <b>专业
                 <b>类别*/
         return map;
+    }
+
+    @Override
+    public boolean logout(String username, String password) throws Exception {
+
+        //params.setUrl("http://service.swu.edu.cn/fee/remote_logout2.jsp"); 退出校园网登录参数
+        //String form = "username=huanjinzi&password=197325&B1=确认";
+
+        HjzHttp hjz = HjzHttp.getInstance();
+        params.setUrl("http://service.swu.edu.cn/fee/remote_logout2.jsp");
+        params.setForm("username=" + username + "&password=" + password + "&B1=确认");
+        InputStream in = hjz.post(params);
+        StringBuilder sb = HjzStreamReader.getString(in);
+        return false;
     }
 }

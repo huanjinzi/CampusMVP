@@ -1,4 +1,4 @@
-package com.campus.huanjinzi.campusmvp.http.data;
+package com.campus.huanjinzi.campusmvp.data;
 
 import java.util.UUID;
 
@@ -21,7 +21,16 @@ public final class Student {
     private int credit = -1;//已获学分
     private String netusername = null;//校园网账号
     private String netpassword = null;//校园网密码
+    private String political_status = null;//z政治面貌
     private String mUUID;//唯一码
+
+    public String getPolitical_status() {
+        return political_status;
+    }
+
+    public void setPolitical_status(String political_status) {
+        this.political_status = political_status;
+    }
 
     public void setNetusername(String netusername) {
         this.netusername = netusername;
@@ -86,10 +95,6 @@ public final class Student {
 
     public String getmUUID() {
         return mUUID;
-    }
-
-    public void setmUUID(String mUUID) {
-        this.mUUID = mUUID;
     }
 
     public String getNetusername() {
