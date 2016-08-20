@@ -23,6 +23,16 @@ public final class Student {
     private String netpassword = null;//校园网密码
     private String political_status = null;//z政治面貌
     private String mUUID;//唯一码
+    private String degree = null;//学位
+    private Transcript transcript = null;
+
+    public String getDegree() {
+        return degree;
+    }
+
+    public void setDegree(String degree) {
+        this.degree = degree;
+    }
 
     public String getPolitical_status() {
         return political_status;

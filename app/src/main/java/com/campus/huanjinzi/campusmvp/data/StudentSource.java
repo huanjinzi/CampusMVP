@@ -7,8 +7,5 @@ import java.util.HashMap;
  */
 public interface StudentSource {
 
-    HashMap<String, String> getBaseInfoMap(String username, String password) throws Exception;
-
-    boolean logout(String username, String password) throws Exception;
-
+    HashMap<String, String> getBaseInfoMap(CXParams params) throws Exception;
 }

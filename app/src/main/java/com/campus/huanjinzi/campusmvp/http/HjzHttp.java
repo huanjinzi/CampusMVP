@@ -50,6 +50,8 @@ public class HjzHttp implements IHjzHttp {
             if (cookiemap != null && cookiemap.get(domain) != null) {
                 HttpCookie cookie = null;
                 if (cookiemap.get(hostname) != null) {
+
+                    // TODO: 2016/8/20 遍历map中的domian cookie，用一个list来存储domain
                     if (hostname.contains(domain)) {
                         cookie = cookiemap.get(domain);
                         StringBuilder sb = new StringBuilder();

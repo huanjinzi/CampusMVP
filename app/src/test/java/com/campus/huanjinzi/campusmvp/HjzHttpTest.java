@@ -8,7 +8,7 @@ import com.campus.huanjinzi.campusmvp.http.Params;
 import org.junit.Test;
 
 import java.io.InputStream;
-import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,7 +23,7 @@ public class HjzHttpTest {
 
         HashMap<String, String> map = new HashMap<>();
         HjzHttp hjz = HjzHttp.getInstance();
-        Params params = new Params();
+        Params params = Params.getInstance();
 
         //params.setUrl("http://service.swu.edu.cn/fee/remote_logout2.jsp"); 退出校园网登录参数
         //String form = "username=huanjinzi&password=197325&B1=确认";
@@ -85,7 +85,7 @@ public class HjzHttpTest {
     @Test
     public void jwpost() throws Exception {
         HjzHttp hjz = HjzHttp.getInstance();
-        Params params = new Params();
+        Params params = Params.getInstance();
 
         //params.setUrl("http://service.swu.edu.cn/fee/remote_logout2.jsp"); 退出校园网登录参数
         //String form = "username=huanjinzi&password=197325&B1=确认";
@@ -113,37 +113,21 @@ public class HjzHttpTest {
             in.close();
         }
 
-        params.setUrl("http://jw.swu.edu.cn/jwglxt/xtgl/index_initMenu.html");
-        in = hjz.get(params);
+        Date date = new Date();
+        params.setUrl("http://jw.swu.edu.cn/jwglxt/cjcx/cjcx_cxDgXscj.html?doType=query&gnmkdmKey=N305005&" +
+                "sessionUserKey=" + "222013322270099");
+        params.setForm("xnm=2015&xqm=12&_search=false&nd=" + date.getTime() + "&queryModel.showCount=15&queryModel.currentPage=1&queryModel.sortName=&queryModel.sortOrder=asc&time=0");
+        in = HjzHttp.getInstance().post(params);
         //if(in != null){in.close();}
-        //StringBuilder sb = HjzStreamReader.getString(in, "UTF-8","gzip");
-        //System.out.println(sb);
+        StringBuilder sb = HjzStreamReader.getString(in, "UTF-8");
+        System.out.println(sb);
 
 
     }
-
-    @Test
-    public void urltest() throws Exception {
-        //URL url = new URL(".urp.swu.edu.cn");
-        int i = 5 / 4;
-        System.out.println(i);
-
-    }
-
-    @Test
-    public void StringBuildertest() throws Exception {
-        StringBuilder sb = new StringBuilder();
-        sb.append("s");
-        sb.append("\n");
-        sb.append("b");
-        System.out.println(sb.toString());
-
-    }
-
     @Test
     public void get() throws Exception {
         HjzHttp hjz = HjzHttp.getInstance();
-        Params params = new Params();
+        Params params = Params.getInstance();
         params.setUrl("http://www.swu.edu.cn");
         InputStream in = hjz.get(params);
         StringBuilder sb = HjzStreamReader.getString(in, "gb2312");

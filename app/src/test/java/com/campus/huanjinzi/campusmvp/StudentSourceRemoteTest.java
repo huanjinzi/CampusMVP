@@ -17,7 +17,7 @@ public class StudentSourceRemoteTest {
     @Test
     public void layout1() throws Exception {
         HjzHttp hjz = HjzHttp.getInstance();
-        Params params = new Params();
+        Params params = Params.getInstance();
         params.setUrl("http://service.swu.edu.cn/fee/remote_logout2.jsp");
         params.setForm("username=huanjinzi&password=197325&B1=确认");
         InputStream in = hjz.post(params);

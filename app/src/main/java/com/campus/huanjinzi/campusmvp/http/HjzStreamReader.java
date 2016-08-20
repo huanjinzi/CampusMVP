@@ -56,25 +56,25 @@ public class HjzStreamReader {
                 }
             } else {
 
+                /*只适合截取很短的信息，信息太长，缓冲区太大*/
+
                 if (encode != null && encode.toLowerCase().contains("gzip")) {
 
-                    byte[] bytebuf = new byte[1024];
+                    byte[] bytebuf = new byte[end - start];
                     gzipreader = new GZIPInputStream(in);
 
-                    for (int i = 0; i < times; i++) {
+
                         len = gzipreader.read(bytebuf);
                         sb.append(new String(bytebuf, 0, len));
                         // TODO: 2016/8/10 进度读取，需要知道返回值的长度
-                    }
-                } else {
 
-                    char[] buf = new char[1024];
+                } else {
+                    char[] buf = new char[end - start];
                     reader = new InputStreamReader(in, charset);
-                    for (int i = 0; i < times; i++) {
                         len = reader.read(buf);
                         sb.append(buf, 0, len);
                         // TODO: 2016/8/10 进度读取，需要知道返回值的长度
-                    }
+
                 }
             }
 

@@ -3,14 +3,12 @@ package com.campus.huanjinzi.campusmvp.swuwifi;
 import com.campus.huanjinzi.campusmvp.swuwifi.Remote.WifiLanderTask;
 
 /**
- * Created by huanjinzi on 2016/8/13.
- * WifiLander子类，负责在寝室登录
+ * Created by huanjinzi on 2016/8/16.
  */
-public class WifiLanderDorm extends WifiLander {
-
+public class WifiLanderClass extends WifiLander {
 
     /**
-     * 寝室wifi登录方法
+     * 教室wifi登录方法
      *
      * @param username 校园网用户名
      * @param password 校园网密码
@@ -18,6 +16,7 @@ public class WifiLanderDorm extends WifiLander {
      */
     @Override
     boolean login(String username, String password) throws Exception {
-        return WifiLanderTask.getInstance().loginDorm(username, password);
+
+        return WifiLanderTask.getInstance().loginClass(username, password);
     }
 }

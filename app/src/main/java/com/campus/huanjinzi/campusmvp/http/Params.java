@@ -5,6 +5,14 @@ package com.campus.huanjinzi.campusmvp.http;
  */
 public class Params {
 
+    private static Params params = new Params();
+
+    public static Params getInstance() {
+        return params;
+    }
+
+    private Params() {
+    }
     private String url = null;
     private String form = null;//请求提交的表单
 
