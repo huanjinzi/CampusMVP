@@ -10,32 +10,22 @@ import java.util.zip.GZIPInputStream;
 public class HjzStreamReader {
 
     public static StringBuilder getString(InputStream in) throws Exception {
-        return getString(in, "utf-8", null, 0, -1);
+        return getString(in, "utf-8", null);
     }
 
     public static StringBuilder getString(InputStream in, String charset) throws Exception {
-        return getString(in, charset, null, 0, -1);
+        return getString(in, charset, null);
     }
 
-    public static StringBuilder getString(InputStream in, int start, int end) throws Exception {
 
-        return getString(in, "utf-8", null, start, end);
-    }
-
-    public static StringBuilder getString(InputStream in, String charset, String encode, int start, int end) throws Exception {
+    public static StringBuilder getString(InputStream in, String charset, String encode) throws Exception {
 
 
         int len = 0;
-        int contentlenth = end - start;
-        //加一次保证读到需要的长度(读够)
-        int times = contentlenth / 1024 + 1;
-        //skip误差保证读到需要的长度
-        long deviation = start - in.skip(start);
         StringBuilder sb = new StringBuilder();
         GZIPInputStream gzipreader = null;
         InputStreamReader reader = null;
         try {
-            if (end == -1) {
                 if (encode != null && encode.toLowerCase().contains("gzip")) {
 
                     byte[] bytebuf = new byte[1024];
@@ -46,39 +36,13 @@ public class HjzStreamReader {
                         // TODO: 2016/8/10 进度读取，需要知道返回值的长度
                     }
                 } else {
-
-                    char[] buf = new char[1024];
+                    char[] buf = new char[2048];
                     reader = new InputStreamReader(in, charset);
                     while ((len = reader.read(buf)) != -1) {
                         sb.append(buf, 0, len);
                         // TODO: 2016/8/10 进度读取，需要知道返回值的长度
                     }
                 }
-            } else {
-
-                /*只适合截取很短的信息，信息太长，缓冲区太大*/
-
-                if (encode != null && encode.toLowerCase().contains("gzip")) {
-
-                    byte[] bytebuf = new byte[end - start];
-                    gzipreader = new GZIPInputStream(in);
-
-
-                        len = gzipreader.read(bytebuf);
-                        sb.append(new String(bytebuf, 0, len));
-                        // TODO: 2016/8/10 进度读取，需要知道返回值的长度
-
-                } else {
-                    char[] buf = new char[end - start];
-                    reader = new InputStreamReader(in, charset);
-                        len = reader.read(buf);
-                        sb.append(buf, 0, len);
-                        // TODO: 2016/8/10 进度读取，需要知道返回值的长度
-
-                }
-            }
-
-
         } finally {
             if (gzipreader != null)
                 gzipreader.close();

@@ -1,15 +1,17 @@
 package com.campus.huanjinzi.campusmvp.data.remote;
 
+import com.campus.huanjinzi.campusmvp.data.cjbean.CJBean;
 import com.campus.huanjinzi.campusmvp.data.CXParams;
 import com.campus.huanjinzi.campusmvp.data.StudentSource;
-import com.campus.huanjinzi.campusmvp.data.Transcript;
 import com.campus.huanjinzi.campusmvp.data.local.Constants;
 import com.campus.huanjinzi.campusmvp.http.HjzHttp;
 import com.campus.huanjinzi.campusmvp.http.HjzStreamReader;
 import com.campus.huanjinzi.campusmvp.http.Params;
 import com.campus.huanjinzi.campusmvp.utils.MyLog;
+import com.google.gson.Gson;
 
 import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,14 +45,16 @@ public class StudentSourceRemote implements StudentSource {
 
         params.setUrl(Constants.BASE_INFO_URL);
         in = hjz.get(params);
-        StringBuilder sb = HjzStreamReader.getString(in, 18646, 20500);
-
+        SoftReference<StringBuilder> wsb  = new SoftReference<StringBuilder>(HjzStreamReader.getString(in));
         /*匹配“<b>学号”格式的字符串*/
+        String temp = null;
         Pattern p1 = Pattern.compile("<b>[\\u4E00-\\u9FA5]+");
         Pattern p2 = Pattern.compile("&nbsp;[0-9\\u4E00-\\u9FA5A-Z]+");
-        Matcher m1 = p1.matcher(sb);
-        Matcher m2 = p2.matcher(sb);
-
+        temp = wsb.get().substring(18140,19820);
+        MyLog.log(temp);
+        Matcher m1 = p1.matcher(temp);
+        Matcher m2 = p2.matcher(temp);
+        temp = null;
         /*Matcher的find()方法返回的是一个boolean值，返回为true则表示找到对应的字符串模式
         * 再调用Matcher的group()返回找到的字符串*/
         while (m2.find() && m1.find()) {
@@ -66,7 +70,7 @@ public class StudentSourceRemote implements StudentSource {
         return map;
     }
 
-    public Transcript getTranscript(CXParams cjcxParams) throws Exception {
+    public CJBean getTranscript(CXParams cjcxParams) throws Exception {
 
         InputStream in = null;
         if (time == 0) {
@@ -79,11 +83,13 @@ public class StudentSourceRemote implements StudentSource {
         params.setForm(Constants.getCjcxForm(cjcxParams, time));
         time++;
         in = HjzHttp.getInstance().post(params);
-        StringBuilder sb = HjzStreamReader.getString(in, "UTF-8");
+        StringBuilder sb = HjzStreamReader.getString(in, "utf-8");
+        Gson gson = new Gson();
+        SoftReference<CJBean> cj = new SoftReference<CJBean>(gson.fromJson(sb.toString(), CJBean.class));
+        MyLog.log(sb.toString());
         // TODO: 2016/8/20 解析成绩： 1.正则表达式 2.开源json解析库
-        System.out.println(sb);
         MyLog.log(this.getClass().getName(), "getBaseInfoMap", "exit()");
-        return null;
+        return cj.get();
     }
 
     /*password validate*/

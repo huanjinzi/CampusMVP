@@ -66,7 +66,7 @@ public final class Constants {
     /*在寝室(Dorm)登录校园网wifi表单*/
     public static final String getLoginDormForm(String username, String password) {
         Date date = new Date();
-        return "loginTime=" + date.getTime() + "&username=" + username + "&password" + password;
+        return "loginTime=" + date.getTime() + "&username=" + username + "&password=" + password;
     }
 
     /*在教室(Class)登录校园网wifi url*/
@@ -80,4 +80,7 @@ public final class Constants {
     public static final String getLoginClassForm(String username, String password) {
         return "username=" + username + "&password=" + password + "&if_login=Y&B2=%B5%C7%C2%BC%28Login%29";
     }
+
+    /*寝室登录成功返回的字段*/
+    public static final String DORM_SUCCESS = "%E7%99%BB%E5%BD%95%E6%88%90%E5%8A%9F";
 }

@@ -3,10 +3,12 @@ package com.campus.huanjinzi.campusmvp;
 import com.campus.huanjinzi.campusmvp.data.CXParams;
 import com.campus.huanjinzi.campusmvp.data.Student;
 import com.campus.huanjinzi.campusmvp.data.StudentFactory;
+import com.campus.huanjinzi.campusmvp.data.remote.StudentSourceRemote;
 import com.campus.huanjinzi.campusmvp.utils.MyLog;
 
 import org.junit.Test;
 
+import java.lang.ref.WeakReference;
 import java.util.Date;
 
 /**

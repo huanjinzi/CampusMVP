@@ -24,7 +24,16 @@ public final class Student {
     private String political_status = null;//z政治面貌
     private String mUUID;//唯一码
     private String degree = null;//学位
-    private Transcript transcript = null;
+
+    public ECard geteCard() {
+        return eCard;
+    }
+
+    public void seteCard(ECard eCard) {
+        this.eCard = eCard;
+    }
+
+    private ECard eCard = null;//
 
     public String getDegree() {
         return degree;

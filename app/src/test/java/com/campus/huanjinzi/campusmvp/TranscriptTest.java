@@ -1,7 +1,9 @@
 package com.campus.huanjinzi.campusmvp;
 
+import com.campus.huanjinzi.campusmvp.data.cjbean.CJBean;
 import com.campus.huanjinzi.campusmvp.data.CXParams;
 import com.campus.huanjinzi.campusmvp.data.remote.StudentSourceRemote;
+import com.campus.huanjinzi.campusmvp.data.remote.TStudentSourceRemote;
 
 import org.junit.Test;
 
@@ -18,9 +20,10 @@ public class TranscriptTest {
         params.setStudent_id("222013322270099");
         params.setYear("2015");
         params.setTerm("12");
-        StudentSourceRemote.getInstance().getTranscript(params);
-        params.setYear("2014");
-        params.setTerm("3");
-        StudentSourceRemote.getInstance().getTranscript(params);
+        CJBean cj = TStudentSourceRemote.getTranscript();
+        //ArrayList<Items>cj.getItems();
+        /*params.setYear("2014");
+        params.setTerm("12");
+        StudentSourceRemote.getInstance().getTranscript(params);*/
     }
 }

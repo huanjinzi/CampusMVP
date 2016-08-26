@@ -4,6 +4,9 @@ android {
     compileSdkVersion 23
     buildToolsVersion "24.0.1"
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
     defaultConfig {
         applicationId "com.campus.huanjinzi.campusmvp"
         minSdkVersion 15
@@ -13,7 +16,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -24,6 +27,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
-    compile files('libs/jsoup-1.9.2.jar')
     compile 'com.google.code.gson:gson:2.2.4'
+    //compile files('lib/jsoup-1.9.2.jar')
 }
