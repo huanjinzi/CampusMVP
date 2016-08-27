@@ -9,17 +9,24 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.campus.huanjinzi.campusmvp.data.cjbean.CJBean;
+
 /**
  * Created by huanjinzi on 2016/8/23.
  */
 public class ExcelView extends View {
     private Paint mpaint;
     private Adapter adapter;
-    private int rowh = 0;
-    private int rankw = 0;
     private int row = 0;
     private int rank = 0;
     private Handler mHandler;
+    private int textsize = 40;
+
+    public void setCj(CJBean cj) {
+        this.cj = cj;
+    }
+
+    private CJBean cj;
 
     public int getNum() {
         return num;
@@ -34,8 +41,8 @@ public class ExcelView extends View {
     private void init(){
         mpaint = new Paint();
         mpaint.setStyle(Paint.Style.STROKE);
-        mpaint.setStrokeWidth(2);
-        mpaint.setTextSize(60);
+        mpaint.setStrokeWidth(4);
+        mpaint.setTextSize(textsize);
         mHandler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -46,7 +53,7 @@ public class ExcelView extends View {
             }
         };
         //500ms之后启动
-        mHandler.sendEmptyMessageDelayed(0,500);
+        //mHandler.sendEmptyMessageDelayed(0,500);
 
         /*mHandler  = new Handler();
         Thread thread = new Thread(new Runnable() {
@@ -98,45 +105,41 @@ public class ExcelView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
 
-        if(num == 15){num =1;}
+        int width = canvas.getWidth()-5;
         mpaint.setColor(Color.BLACK);
+        row = cj.getTotalResult();
+        rank = 5;//课程名称、分数、学分、选修还是必修、绩点
+        int[] rowh = {110,220};
+        int[] rankw = {width/7*3,width/7,width/7,width/7,width/7};
         canvas.translate(5,5);
-        row = 10;
-        rank = 8;
-        rowh = 110;
-        rankw = 120;
         for (int i = 0; i < rank; i ++)
         {
             for (int j = 0; j < row; j ++)
             {
-                if((i *row +j)%num == 0 )
-                {
-                    mpaint.setColor(Color.GREEN);
-                    mpaint.setStyle(Paint.Style.FILL);
-                    canvas.drawRect(0,0,rankw,rowh,mpaint);
-
-                    mpaint.setColor(Color.BLACK);
-                    mpaint.setStyle(Paint.Style.STROKE);
-                    canvas.drawRect(0,0,rankw,rowh,mpaint);
-                }
-                else
-                {
-                    mpaint.setStyle(Paint.Style.STROKE);
-                    canvas.drawRect(0,0,rankw,rowh,mpaint);
-                }
-
                 mpaint.setStyle(Paint.Style.FILL);
-                canvas.drawText(i*row+j+"",rankw/2-30,rowh/2 + 20,mpaint);
-                canvas.translate(0,rowh);
+                switch (i){
+                    case 0:
+                        canvas.drawText(cj.getItems().get(j).getKcmc(),16,(rowh[0]+textsize)/2,mpaint);
+                        break;
+                    case 1:
+                        canvas.drawText(cj.getItems().get(j).getCj(),16,(rowh[0]+textsize)/2,mpaint);
+                        break;
+                    case 2:
+                        canvas.drawText(cj.getItems().get(j).getXf(),16,(rowh[0]+textsize)/2,mpaint);
+                        break;
+                    case 3:
+                        canvas.drawText(cj.getItems().get(j).getJd(),16,(rowh[0]+textsize)/2,mpaint);
+                        break;
+                    case 4:
+                        canvas.drawText(cj.getItems().get(j).getKcxzmc(),16,rowh[0]/3*2,mpaint);
+                        break;
+                }
+                mpaint.setStyle(Paint.Style.STROKE);
+                canvas.drawRect(0,0,rankw[i],rowh[0],mpaint);
+                canvas.translate(0,rowh[0]);
             }
-                canvas.translate(rankw,-rowh*row);
+                canvas.translate(rankw[i],-rowh[0]*row);
         }
-        canvas.translate(-rank * rankw,rowh*row +100);
-        canvas.translate(canvas.getWidth()/2,0);
-        canvas.drawText("fragment:"+num,rankw/2-30,rowh/2 + 20,mpaint);
-
-        num++;
-
     }
 
     /*设置adapter*/
