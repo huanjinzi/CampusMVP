@@ -109,36 +109,62 @@ public class ExcelView extends View {
         mpaint.setColor(Color.BLACK);
         row = cj.getTotalResult();
         rank = 5;//课程名称、分数、学分、选修还是必修、绩点
-        int[] rowh = {110,220};
-        int[] rankw = {width/7*3,width/7,width/7,width/7,width/7};
+        int rowh_flag = 0;//行高控制标志位
+        int excel_h = 0;
+        int[] rowh = {110,180};
+        int[] rankw = {width/28*12,width/28*3,width/28*3,width/28*3,width/28*7};
+        int[] flag = new int[row];//用来记录是否应该扩展行高
         canvas.translate(5,5);
+
+        /**表头绘制*/
         for (int i = 0; i < rank; i ++)
         {
             for (int j = 0; j < row; j ++)
             {
+                String kcmc = cj.getItems().get(j).getKcmc();
+                String kcxzmc = cj.getItems().get(j).getKcxzmc();
+
                 mpaint.setStyle(Paint.Style.FILL);
                 switch (i){
                     case 0:
-                        canvas.drawText(cj.getItems().get(j).getKcmc(),16,(rowh[0]+textsize)/2,mpaint);
+
+                        if(textsize*(kcmc.length()+1) > rankw[0])
+                        {
+                            flag[j] = 1;
+                            rowh_flag = 1;
+                            canvas.drawText(kcmc.substring(0,(rankw[0])/textsize -1),16,rowh[rowh_flag]/2,mpaint);
+                            canvas.drawText(kcmc.substring((rankw[0])/textsize - 1,kcmc.length()),16,rowh[rowh_flag]/2+textsize,mpaint);
+                        }
+                        else
+                        {
+                            rowh_flag = 0;
+                            canvas.drawText(kcmc,16,(rowh[0]+textsize)/2,mpaint);
+                        }
                         break;
                     case 1:
-                        canvas.drawText(cj.getItems().get(j).getCj(),16,(rowh[0]+textsize)/2,mpaint);
+                        if(flag[j] == 1){rowh_flag = 1;}else {rowh_flag = 0;}
+                        canvas.drawText(cj.getItems().get(j).getCj(),16,(rowh[rowh_flag]+textsize)/2,mpaint);
                         break;
                     case 2:
-                        canvas.drawText(cj.getItems().get(j).getXf(),16,(rowh[0]+textsize)/2,mpaint);
+                        if(flag[j] == 1){rowh_flag = 1;}else {rowh_flag = 0;}
+                        canvas.drawText(cj.getItems().get(j).getXf(),16,(rowh[rowh_flag]+textsize)/2,mpaint);
                         break;
                     case 3:
-                        canvas.drawText(cj.getItems().get(j).getJd(),16,(rowh[0]+textsize)/2,mpaint);
+                        if(flag[j] == 1){rowh_flag = 1;}else {rowh_flag = 0;}
+                        canvas.drawText(cj.getItems().get(j).getJd(),16,(rowh[rowh_flag]+textsize)/2,mpaint);
                         break;
                     case 4:
-                        canvas.drawText(cj.getItems().get(j).getKcxzmc(),16,rowh[0]/3*2,mpaint);
+                        if(flag[j] == 1){rowh_flag = 1;}else {rowh_flag = 0;}
+                        canvas.drawText(cj.getItems().get(j).getKcxzmc(),16,(rowh[rowh_flag]+textsize)/2,mpaint);
                         break;
                 }
                 mpaint.setStyle(Paint.Style.STROKE);
-                canvas.drawRect(0,0,rankw[i],rowh[0],mpaint);
-                canvas.translate(0,rowh[0]);
+                canvas.drawRect(0,0,rankw[i],rowh[rowh_flag],mpaint);
+                canvas.translate(0,rowh[rowh_flag]);
+                excel_h+=rowh[rowh_flag];
             }
-                canvas.translate(rankw[i],-rowh[0]*row);
+                canvas.translate(rankw[i],-excel_h);
+                excel_h = 0;
         }
     }
 
