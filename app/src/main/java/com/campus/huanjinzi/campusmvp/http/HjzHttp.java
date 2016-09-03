@@ -1,6 +1,7 @@
 package com.campus.huanjinzi.campusmvp.http;
 
 import com.campus.huanjinzi.campusmvp.utils.MyLog;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpCookie;
@@ -15,7 +16,6 @@ public class HjzHttp implements IHjzHttp {
 
 
     private HashMap<String, HttpCookie> cookiemap;
-    private String domain = null;
     private String hostname = null;
 
     private static HjzHttp ourinstance = new HjzHttp();
@@ -31,7 +31,7 @@ public class HjzHttp implements IHjzHttp {
         /*关闭重定向 302*/
         HttpURLConnection.setFollowRedirects(false);
     }
-
+//https://uaaap.swu.edu.cn/cas/login?service=http://i.swu.edu.cn%2FPersonalApplications%2FviewPage%3Factive_nav_num%3D1&CTgtId=TGT-10442-Tui03eiPdb4lOdef0gUF1eGVdOQU2mUOyCNhHfd91ILAJjxmwi-http://222.198.120.206:8082/cas
 
     @Override
     public InputStream post(Params params) throws Exception {
@@ -47,62 +47,40 @@ public class HjzHttp implements IHjzHttp {
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
             /*判断请求是否需要cookie，需要在setRequestMethod("POST")之前*/
-            if (cookiemap != null && cookiemap.get(domain) != null) {
+            if (cookiemap != null) {
                 HttpCookie cookie = null;
                 if (cookiemap.get(hostname) != null) {
 
-                    // TODO: 2016/8/20 遍历map中的domian cookie，用一个list来存储domain
-                    if (hostname.contains(domain)) {
-                        cookie = cookiemap.get(domain);
-                        StringBuilder sb = new StringBuilder();
-                        sb.append(cookie.getName() + "=" + cookie.getValue() + ";");
-
-                        cookie = cookiemap.get(hostname);
-                        sb.append(cookie.getName() + "=" + cookie.getValue());
-                        MyLog.log("Request-Cookie:" + sb.toString());
-                        con.setRequestProperty("Cookie", sb.toString());
-                    }
-                } else {
-                    cookie = cookiemap.get(domain);
-                    MyLog.log("Request-Cookie:" + cookie.getName() + "=" + cookie.getValue());
-                    con.setRequestProperty("Cookie", cookie.getName() + "=" + cookie.getValue());
+                    StringBuilder sb = new StringBuilder();
+                    cookie = cookiemap.get(hostname);
+                    sb.append(cookie.getName() + "=" + cookie.getValue());
+                    MyLog.log("Request-Cookie:" + sb.toString());
+                    con.setRequestProperty("Cookie", sb.toString());
                 }
-            }
 
-            con.setRequestMethod("POST");
-            con.setReadTimeout(10 * 1000);
-            con.setConnectTimeout(10 * 1000);
+                con.setRequestMethod("POST");
+                con.setReadTimeout(10 * 1000);
+                con.setConnectTimeout(10 * 1000);
 
-            con.setDoOutput(true);
-            con.setDoInput(true);
+                con.setDoOutput(true);
+                con.setDoInput(true);
 
-            os = con.getOutputStream();
-            if (params.getForm() != null) {
-                os.write(params.getForm().getBytes());
-            }
+                os = con.getOutputStream();
+                if (params.getForm() != null) {
+                    os.write(params.getForm().getBytes());
+                }
 
-            if (con.getResponseCode() == 200) {
-                /*for (String key:
-                        con.getHeaderFields().keySet()) {
-                    System.out.println(key +"="+con.getHeaderFields().get(key));
-                }*/
+                if (con.getResponseCode() == 200) {
+
                 /*是否存在cookie*/
-                if (con.getHeaderFields().get("Set-Cookie") != null) {
-                    //cookie存在，获取cookie
-                    HttpCookie httpcookie = HttpCookie.parse(con.getHeaderFields().get("Set-Cookie").get(0)).get(0);
-                    //判断cookie有没有domain，有的话就存储domain和对应的cookie值--.swu.edu.cn
-                    if (httpcookie.getDomain() != null) {
-                        domain = httpcookie.getDomain();
-                        cookiemap.put(httpcookie.getDomain(), httpcookie);
-                        MyLog.log("Response-Cookie:" + httpcookie.getName() + "=" + httpcookie.getValue());
-                    }
-                    //没有的话就存储hostname和对应的cookie值
-                    else {
+                    if (con.getHeaderFields().get("Set-Cookie") != null) {
+                        //cookie存在，获取cookie
+                        HttpCookie httpcookie = HttpCookie.parse(con.getHeaderFields().get("Set-Cookie").get(0)).get(0);
                         MyLog.log("Response-Cookie:" + httpcookie.getName() + "=" + httpcookie.getValue());
                         cookiemap.put(hostname, httpcookie);
                     }
+                    in = con.getInputStream();
                 }
-                in = con.getInputStream();
             }
         } finally {
             if (os != null) {
@@ -125,23 +103,15 @@ public class HjzHttp implements IHjzHttp {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
         /*判断请求是否需要cookie，需要在setRequestMethod("POST")之前*/
-        if (cookiemap != null && cookiemap.get(domain) != null) {
+        if (cookiemap != null) {
             HttpCookie cookie = null;
             if (cookiemap.get(hostname) != null) {
-                if (hostname.contains(domain)) {
-                    cookie = cookiemap.get(domain);
-                    StringBuilder sb = new StringBuilder();
-                    sb.append(cookie.getName() + "=" + cookie.getValue() + ";");
 
-                    cookie = cookiemap.get(hostname);
-                    sb.append(cookie.getName() + "=" + cookie.getValue());
-                    MyLog.log("Request-Cookie:" + sb.toString());
-                    con.setRequestProperty("Cookie", sb.toString());
-                }
-            } else {
-                cookie = cookiemap.get(domain);
-                MyLog.log("Request-Cookie:" + cookie.getName() + "=" + cookie.getValue());
-                con.setRequestProperty("Cookie", cookie.getName() + "=" + cookie.getValue());
+                StringBuilder sb = new StringBuilder();
+                cookie = cookiemap.get(hostname);
+                sb.append(cookie.getName() + "=" + cookie.getValue());
+                MyLog.log("Request-Cookie:" + sb.toString());
+                con.setRequestProperty("Cookie", sb.toString());
             }
         }
 
@@ -155,30 +125,14 @@ public class HjzHttp implements IHjzHttp {
 
         if (con.getResponseCode() == 200 || con.getResponseCode() == 302) {
 
-            /*for (String key :
-                    con.getHeaderFields().keySet()) {
-                System.out.println(key + "=" + con.getHeaderFields().get(key));
-            }*/
-
             /*是否存在cookie*/
             if (con.getHeaderFields().get("Set-Cookie") != null) {
                 //cookie存在，获取cookie
                 HttpCookie httpcookie = HttpCookie.parse(con.getHeaderFields().get("Set-Cookie").get(0)).get(0);
-                //判断cookie有没有domain，有的话就存储domain和对应的cookie值--.swu.edu.cn
-                if (httpcookie.getDomain() != null) {
-                    domain = httpcookie.getDomain();
-                    cookiemap.put(httpcookie.getDomain(), httpcookie);
-                    MyLog.log("Response-Cookie:" + httpcookie.getName() + "=" + httpcookie.getValue());
-
-                }
-                //没有的话就存储hostname和对应的cookie值
-                else {
-                    MyLog.log("Response-Cookie:" + httpcookie.getName() + "=" + httpcookie.getValue());
-                    cookiemap.put(hostname, httpcookie);
-                }
+                MyLog.log("Response-Cookie:" + httpcookie.getName() + "=" + httpcookie.getValue());
+                cookiemap.put(hostname, httpcookie);
             }
             in = con.getInputStream();
-
         }
         MyLog.log(this.getClass().getName(), "get", "exit()");
         return in;

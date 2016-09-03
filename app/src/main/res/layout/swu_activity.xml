@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/GREY_900"
+        android:id="@+id/tabs"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+        <com.campus.huanjinzi.campusmvp.view.customview.ProgressView
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:id="@+id/progess"/>
+    </RelativeLayout>
+    <ListView
+        android:id="@+id/swu_listview"
+        android:layout_below="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:dividerHeight="0dp"
+        android:divider="@color/GREY_200"
+        android:footerDividersEnabled="true"
+        android:background="@color/GREY_200"/>
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:paddingTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/ALPHA"
+            app:theme="@style/AppTheme.AppBarOverlay">
+        </android.support.v7.widget.Toolbar>
+
+</RelativeLayout>

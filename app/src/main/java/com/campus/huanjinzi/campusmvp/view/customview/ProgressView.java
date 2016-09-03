@@ -6,7 +6,6 @@ import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -38,7 +37,6 @@ public class ProgressView extends View {
             }
         };
         mHandler.sendEmptyMessageDelayed(0, 400);
-
     }
 
     public ProgressView(Context context) {
@@ -145,7 +143,11 @@ public class ProgressView extends View {
                 case MotionEvent.ACTION_UP:
                     time = System.currentTimeMillis() - time;
                     if (time < 300) { mOnClickListener.onClick(this); }
-                    if(time > 1000){mOnLongClickListener.onLongClick(this);}
+                    if(time > 1000){
+                        if(null != mOnLongClickListener){
+                            mOnLongClickListener.onLongClick(this);
+                        }
+                    }
                     drawcircle = false;
                     drawrect = false;
                     break;
@@ -163,6 +165,8 @@ public class ProgressView extends View {
 
     @Override
     public void setOnLongClickListener(OnLongClickListener l) {mOnLongClickListener = l;}
+
+
 
     private boolean clickable = true;
     public void Clickable(boolean clickable) {

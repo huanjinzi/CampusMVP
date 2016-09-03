@@ -37,13 +37,7 @@ public class WifiLanderTaskTest {
 
     @Test
     public void logout() throws Exception {
-        boolean is = false;
-        try {
-            is = WifiLanderTask.getInstance().logout("huanjinzi", "197325");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            is = false;
-        }
-        System.out.println(is);
+
+            WifiLanderTask.getInstance().logout("huanjinzi", "197325");
     }
 }

@@ -9,8 +9,6 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.campus.huanjinzi.campusmvp.data.cjbean.CJBean;
-
 /**
  * Created by huanjinzi on 2016/8/23.
  */
@@ -22,11 +20,6 @@ public class ExcelView extends View {
     private Handler mHandler;
     private int textsize = 40;
 
-    public void setCj(CJBean cj) {
-        this.cj = cj;
-    }
-
-    private CJBean cj;
 
     public int getNum() {
         return num;
@@ -41,8 +34,10 @@ public class ExcelView extends View {
     private void init(){
         mpaint = new Paint();
         mpaint.setStyle(Paint.Style.STROKE);
+        mpaint.setAntiAlias(true);
         mpaint.setStrokeWidth(4);
         mpaint.setTextSize(textsize);
+        mpaint.setTextAlign(Paint.Align.CENTER);
         mHandler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -107,8 +102,9 @@ public class ExcelView extends View {
 
         int width = canvas.getWidth()-5;
         mpaint.setColor(Color.BLACK);
-        row = cj.getTotalResult();
+        row = 9;
         rank = 5;//课程名称、分数、学分、选修还是必修、绩点
+        String[] str = {"课程名称","成绩","学分","绩点","性质"};
         int rowh_flag = 0;//行高控制标志位
         int excel_h = 0;
         int[] rowh = {110,180};
@@ -117,12 +113,36 @@ public class ExcelView extends View {
         canvas.translate(5,5);
 
         /**表头绘制*/
+        for (int m = 0; m < 5; m ++)
+        {
+
+            mpaint.setColor(Color.BLACK);
+            mpaint.setStyle(Paint.Style.STROKE);
+            canvas.drawRect(0,0,rankw[m],rowh[0],mpaint);
+
+            mpaint.setColor(Color.GRAY);
+            mpaint.setStyle(Paint.Style.FILL);
+            canvas.drawRect(2,2,rankw[m]-2,rowh[0]-2,mpaint);
+
+            mpaint.setColor(Color.WHITE);
+            canvas.drawText(str[m],rankw[m]/2,(rowh[0]+textsize)/2,mpaint);
+
+            canvas.translate(rankw[m],0);
+            excel_h += rankw[m];
+        }
+        canvas.translate(-excel_h,rowh[0]);
+
+
+        excel_h = 0;
+        mpaint.setColor(Color.BLACK);
+
+        /**表格绘制*/
         for (int i = 0; i < rank; i ++)
         {
             for (int j = 0; j < row; j ++)
             {
-                String kcmc = cj.getItems().get(j).getKcmc();
-                String kcxzmc = cj.getItems().get(j).getKcxzmc();
+                String kcmc = "1";
+                String kcxzmc = "2";
 
                 mpaint.setStyle(Paint.Style.FILL);
                 switch (i){
@@ -132,30 +152,30 @@ public class ExcelView extends View {
                         {
                             flag[j] = 1;
                             rowh_flag = 1;
-                            canvas.drawText(kcmc.substring(0,(rankw[0])/textsize -1),16,rowh[rowh_flag]/2,mpaint);
-                            canvas.drawText(kcmc.substring((rankw[0])/textsize - 1,kcmc.length()),16,rowh[rowh_flag]/2+textsize,mpaint);
+                            canvas.drawText(kcmc.substring(0,(rankw[0])/textsize -1),rankw[i]/2,rowh[rowh_flag]/2,mpaint);
+                            canvas.drawText(kcmc.substring((rankw[0])/textsize - 1,kcmc.length()),rankw[i]/2,rowh[rowh_flag]/2+textsize,mpaint);
                         }
                         else
                         {
                             rowh_flag = 0;
-                            canvas.drawText(kcmc,16,(rowh[0]+textsize)/2,mpaint);
+                            canvas.drawText(kcmc,rankw[i]/2,(rowh[0]+textsize)/2,mpaint);
                         }
                         break;
                     case 1:
                         if(flag[j] == 1){rowh_flag = 1;}else {rowh_flag = 0;}
-                        canvas.drawText(cj.getItems().get(j).getCj(),16,(rowh[rowh_flag]+textsize)/2,mpaint);
+                        canvas.drawText("99",rankw[i]/2,(rowh[rowh_flag]+textsize)/2,mpaint);
                         break;
                     case 2:
                         if(flag[j] == 1){rowh_flag = 1;}else {rowh_flag = 0;}
-                        canvas.drawText(cj.getItems().get(j).getXf(),16,(rowh[rowh_flag]+textsize)/2,mpaint);
+                        canvas.drawText("3.1",rankw[i]/2,(rowh[rowh_flag]+textsize)/2,mpaint);
                         break;
                     case 3:
                         if(flag[j] == 1){rowh_flag = 1;}else {rowh_flag = 0;}
-                        canvas.drawText(cj.getItems().get(j).getJd(),16,(rowh[rowh_flag]+textsize)/2,mpaint);
+                        canvas.drawText("4.0",rankw[i]/2,(rowh[rowh_flag]+textsize)/2,mpaint);
                         break;
                     case 4:
                         if(flag[j] == 1){rowh_flag = 1;}else {rowh_flag = 0;}
-                        canvas.drawText(cj.getItems().get(j).getKcxzmc(),16,(rowh[rowh_flag]+textsize)/2,mpaint);
+                        canvas.drawText("必修",rankw[i]/2,(rowh[rowh_flag]+textsize)/2,mpaint);
                         break;
                 }
                 mpaint.setStyle(Paint.Style.STROKE);

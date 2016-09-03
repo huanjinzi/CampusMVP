@@ -1,9 +1,10 @@
-package com.campus.huanjinzi.campusmvp.swu;
+package com.campus.huanjinzi.campusmvp.SwuTask;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.campus.huanjinzi.campusmvp.R;
-import com.campus.huanjinzi.campusmvp.view.BaseView;
+import com.campus.huanjinzi.campusmvp.BaseView;
 
 public class SwuView extends Fragment implements BaseView<ISwuPresenter> {
 
@@ -33,18 +34,33 @@ public class SwuView extends Fragment implements BaseView<ISwuPresenter> {
      * 12.onDetach
      * */
     private ISwuPresenter presenter;
+    private ViewPager viewpager;
+    private int[] id = {
+            R.mipmap.ic_exit_to_app_grey600_24dp,
+            R.mipmap.ic_credit_card_grey600_24dp,
+            R.mipmap.ic_pageview_grey600_24dp,
+            R.mipmap.ic_assignment_grey600_24dp,
+            R.mipmap.ic_help_grey600_24dp};
+    private String[] str = {
+            "账号退出",
+            "网费充值",
+            "成绩查询",
+            "上网记录",
+            "关于软件"
+    };
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.swu,container,false);
-        ListView listView = (ListView) view.findViewById(R.id.listview1);
+        View view = inflater.inflate(0,container,false);
+        ListView listView = (ListView) view.findViewById(R.id.swu_listview);
         ListViewAdapter adapter = new ListViewAdapter(getActivity());
         listView.setAdapter(adapter);
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                presenter.showFragment(position,view);
+                presenter.showFragment(getContext(),position);
             }
         });
         return view;
@@ -55,23 +71,11 @@ public class SwuView extends Fragment implements BaseView<ISwuPresenter> {
         this.presenter = presenter;
     }
 
+    /**ListViewAdapter
+     * 显示功能列表*/
     class ListViewAdapter extends BaseAdapter {
 
         private LayoutInflater mInflater = null;
-        int[] id = {
-                R.mipmap.ic_exit_to_app_grey600_24dp,
-                R.mipmap.ic_credit_card_grey600_24dp,
-                R.mipmap.ic_pageview_grey600_24dp,
-                R.mipmap.ic_assignment_grey600_24dp,
-                R.mipmap.ic_help_grey600_24dp};
-        String[] str = {
-                "账号退出",
-                "网费充值",
-                "成绩查询",
-                "上网记录",
-                "关于软件"
-        };
-
         private ListViewAdapter(Context context) {
 
             this.mInflater = LayoutInflater.from(context);
@@ -96,11 +100,12 @@ public class SwuView extends Fragment implements BaseView<ISwuPresenter> {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
+            /*运用缓存，提高listview的性能*/
             MyViewHolder holder;
             if (convertView == null) {
 
                 holder = new MyViewHolder();
-                convertView = mInflater.inflate(R.layout.listview1_items, null);
+                convertView = mInflater.inflate(R.layout.swu_listview_item, null);
                 holder.imageView_grid = (ImageView) convertView.findViewById(R.id.image_grid);
                 holder.textView_grid = (TextView) convertView.findViewById(R.id.text_grid);
                 convertView.setTag(holder);
@@ -116,6 +121,7 @@ public class SwuView extends Fragment implements BaseView<ISwuPresenter> {
         }
     }
 
+    /**list的item项*/
     class MyViewHolder {
 
         public ImageView imageView_grid;

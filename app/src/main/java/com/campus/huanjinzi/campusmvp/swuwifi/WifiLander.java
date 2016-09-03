@@ -17,7 +17,7 @@ public abstract class WifiLander {
      * @return 返回true，登录成功；Exception被捕获，连接服务器失败；由于是登录成功之后才会退出，所以用
      * 户名和密码一定是正确的，只要连接服务器成功就退出成功了
      */
-    public boolean logout(String username, String password) throws Exception {
+    public static boolean logout(String username, String password) throws Exception {
 
         return WifiLanderTask.getInstance().logout(username, password);
     }
@@ -29,5 +29,5 @@ public abstract class WifiLander {
      * @param password 校园网密码
      * @return 返回true，登录成功；返回false，用户名或密码错误；Exception被捕获，连接服务器失败；
      */
-    abstract boolean login(String username, String password) throws Exception;
+    public abstract boolean login(String username, String password) throws Exception;
 }

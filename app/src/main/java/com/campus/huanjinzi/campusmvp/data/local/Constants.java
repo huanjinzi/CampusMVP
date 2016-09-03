@@ -46,7 +46,7 @@ public final class Constants {
                 "sessionUserKey=" + params.getStudent_id();
     }
 
-    /*成绩查询表单*/
+    /*教务系统成绩查询表单*/
     public static final String getCjcxForm(CXParams params, int time) {
         Date date = new Date();
         return "xnm=" + params.getYear() + "&xqm=" + params.getTerm() + "&_search=false&nd=" + date.getTime() + "&queryModel.showCount=100&queryModel.currentPage=1&queryModel.sortName=&queryModel.sortOrder=asc&time=" + time;
@@ -83,4 +83,26 @@ public final class Constants {
 
     /*寝室登录成功返回的字段*/
     public static final String DORM_SUCCESS = "%E7%99%BB%E5%BD%95%E6%88%90%E5%8A%9F";
+
+    /*获取基本信息的 url*/
+    public static final String YZSFWMH_URL = "http://i.swu.edu.cn/remote/service/process";
+
+    /*获取学号的表单*/
+    public static final String getIDForm(CXParams params) {
+        return "serviceInfo=%7B%22serviceAddress%22%3A%22https%3A%2F%2Fuaaap.swu.edu.cn%2Fcas%2Fws%2FacpInfoManagerWS%22%2C%22serviceType%22%3A%22soap%22%2C%22serviceSource%22%3A%22td%22%2C%22paramDataFormat%22%3A%22xml%22%2C%22httpMethod%22%3A%22POST%22%2C%22soapInterface%22%3A%22getUserInfoByUserName%22%2C%22params%22%3A%7B%22userName%22%3A%22"+params.getUsename()+"%22%2C%22passwd%22%3A%22"+params.getPassword()+"%22%2C%22clientId%22%3A%22yzsfwmh%22%2C%22clientSecret%22%3A%221qazz%40WSX3edc%24RFV%22%2C%22url%22%3A%22http%3A%2F%2Fi.swu.edu.cn%22%7D%2C%22cDataPath%22%3A%5B%5D%2C%22namespace%22%3A%22%22%2C%22xml_json%22%3A%22%22%7D";
+    }
+    /*获取成绩的表单*/
+    public static final String getCJForm(CXParams params) {
+        return "serviceInfo=%7B%22serviceAddress%22%3A%22dataCenter2.0%2Fsoap%2Fds%2FdataService%22%2C%22serviceType%22%3A%22soap%22%2C%22serviceSource%22%3A%22ds%22%2C%22paramDataFormat%22%3A%22xml%22%2C%22httpMethod%22%3A%22POST%22%2C%22soapInterface%22%3A%22getData%22%2C%22params%22%3A%7B%22arg0%22%3A%7B%22Body%22%3A%7B%22tablename%22%3A%22dataout.v_bks_cj%22%2C%22desc%22%3A%22xnm%2Cxqdm%22%2C%22condition%22%3A%7B%22selects%22%3A%5B%7B%22select%22%3A%5B%7B%22column%22%3A%22xh%22%2C%22opt%22%3A%22EQ%22%2C%22value%22%3A%22"+params.getStudent_id()+"%22%7D%5D%7D%5D%7D%7D%7D%7D%2C%22cDataPath%22%3A%5B%22arg0%22%5D%2C%22namespace%22%3A%22%22%2C%22xml_json%22%3A%22%22%7D";}
+
+    /*获取基本信息的表单*/
+    public static final String getInfoForm(CXParams params) {
+        return "serviceInfo=%7B%22serviceAddress%22%3A%22dataCenter2.0%2Fsoap%2Fds%2FdataService%22%2C%22serviceType%22%3A%22soap%22%2C%22serviceSource%22%3A%22ds%22%2C%22paramDataFormat%22%3A%22xml%22%2C%22httpMethod%22%3A%22POST%22%2C%22soapInterface%22%3A%22getData%22%2C%22params%22%3A%7B%22arg0%22%3A%7B%22Body%22%3A%7B%22tablename%22%3A%22dataout.v_xs_info%22%2C%22condition%22%3A%7B%22selects%22%3A%5B%7B%22select%22%3A%5B%7B%22column%22%3A%22id%22%2C%22opt%22%3A%22EQ%22%2C%22value%22%3A%22"+params.getStudent_id()+"%22%7D%5D%7D%5D%7D%7D%7D%7D%2C%22cDataPath%22%3A%5B%22arg0%22%5D%2C%22namespace%22%3A%22%22%2C%22xml_json%22%3A%22%22%7D";}
+    /**campus程序字段*/
+
+
+    public static final String NOT_LOGIN = "现在没有登录";
+    public static final String LOG_OUT_SUCCESS = "成功退出";
+
+
 }

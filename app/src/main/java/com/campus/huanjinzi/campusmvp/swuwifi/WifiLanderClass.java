@@ -15,7 +15,7 @@ public class WifiLanderClass extends WifiLander {
      * @return 返回true，登录成功；返回false，用户名或密码错误；Exception被捕获，连接服务器失败；
      */
     @Override
-    boolean login(String username, String password) throws Exception {
+    public boolean login(String username, String password) throws Exception {
 
         return WifiLanderTask.getInstance().loginClass(username, password);
     }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--app常用字段-->
+    <integer name="BUTTON">0</integer>
+    <integer name="TITLE">1</integer>
+</resources>

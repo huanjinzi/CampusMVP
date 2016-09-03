@@ -28,8 +28,11 @@ public class WifiLanderTask {
     public boolean logout(String username, String password) throws Exception {
         params.setUrl(Constants.LOGOUT_URL);
         params.setForm(Constants.getLogoutForm(username, password));
-        HjzHttp.getInstance().post(params).close();
-        return true;
+        InputStream in = HjzHttp.getInstance().post(params);
+        StringBuilder sb = HjzStreamReader.getString(in,"gb2312");
+        if(sb.toString().contains(Constants.NOT_LOGIN)){return true;}
+        else if(sb.toString().contains(Constants.LOG_OUT_SUCCESS)){return true;}
+        return false;
     }
 
     /*在寝室(Dorm)登录校园网wifi*/
