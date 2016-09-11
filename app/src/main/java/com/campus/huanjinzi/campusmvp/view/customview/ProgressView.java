@@ -51,7 +51,7 @@ public class ProgressView extends View {
 
 
     private int i = 0;
-    private int j = 10;//点击控件初始圆的大小，默认j*j=100
+    private int j = 20;//点击控件初始圆的大小，默认j*j=100
     private float x = 0;
     private float y = 0;
 
@@ -109,11 +109,11 @@ public class ProgressView extends View {
         mpaint.setStyle(Paint.Style.FILL);
         if (drawcircle) {
             mpaint.setColor(0x22ffffff);
-            canvas.drawCircle(x, y, j * j, mpaint);
+            canvas.drawCircle(x, y, j * 5, mpaint);
 
         }
-        if (j < 35) {
-            j++;
+        if (j < 250) {
+            j+=2;
         }
 
         if (drawrect) {
