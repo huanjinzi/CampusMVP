@@ -84,6 +84,7 @@ public class ExcelView extends View {
         mpaint = new Paint();
         mpaint.setStyle(Paint.Style.STROKE);
         mpaint.setAntiAlias(true);
+        mpaint.setSubpixelText(true);
         mpaint.setStrokeWidth(3);
         mpaint.setTextSize(textsize);
         mpaint.setTextAlign(Paint.Align.CENTER);
