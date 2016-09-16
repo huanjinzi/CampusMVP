@@ -8,6 +8,7 @@
     <color name="WHITE_F1">#f1f1f1</color>
     <color name="GREY_200">#eeeeee</color>
     <color name="GREY_300">#dddddd</color>
+    <color name="GREY_400">#8b8b8b</color>
     <color name="GREY_600">#303030</color>
     <color name="GREY_900">#212121</color>
     <color name="LIGHT_PRIMARY">#de000000</color>

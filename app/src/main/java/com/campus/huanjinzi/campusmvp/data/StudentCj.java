@@ -3,15 +3,17 @@ package com.campus.huanjinzi.campusmvp.data;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by huanjinzi on 2016/9/1.
  */
-public class StudentCj {
+public class StudentCj implements Serializable{
 
     private boolean success;
     private DataBean data;
+
 
     public static StudentCj objectFromData(String str) {
 
@@ -34,7 +36,7 @@ public class StudentCj {
         this.data = data;
     }
 
-    public static class DataBean {
+    public static class DataBean implements Serializable{
         private GetDataResponseBean getDataResponse;
 
         public static DataBean objectFromData(String str) {
@@ -50,7 +52,7 @@ public class StudentCj {
             this.getDataResponse = getDataResponse;
         }
 
-        public static class GetDataResponseBean {
+        public static class GetDataResponseBean implements Serializable {
             @SerializedName("return")
             private ReturnBean returnX;
 
@@ -67,7 +69,7 @@ public class StudentCj {
                 this.returnX = returnX;
             }
 
-            public static class ReturnBean {
+            public static class ReturnBean  implements Serializable{
                 private BodyBean Body;
 
                 public static ReturnBean objectFromData(String str) {
@@ -83,7 +85,7 @@ public class StudentCj {
                     this.Body = Body;
                 }
 
-                public static class BodyBean {
+                public static class BodyBean implements Serializable{
                     private String code;
                     private String flag;
                     private String msg;
@@ -144,7 +146,7 @@ public class StudentCj {
                         this.items = items;
                     }
 
-                    public static class ItemsBean {
+                    public static class ItemsBean implements Serializable{
                         private String xnm;
                         private String xqdm;
                         private String xqm;

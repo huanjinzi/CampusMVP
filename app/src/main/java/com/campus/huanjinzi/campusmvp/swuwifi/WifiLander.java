@@ -29,5 +29,5 @@ public abstract class WifiLander {
      * @param password 校园网密码
      * @return 返回true，登录成功；返回false，用户名或密码错误；Exception被捕获，连接服务器失败；
      */
-    public abstract boolean login(String username, String password) throws Exception;
+    public abstract int login(String username, String password) throws Exception;
 }

@@ -4,7 +4,7 @@ import com.campus.huanjinzi.campusmvp.data.local.Constants;
 import com.campus.huanjinzi.campusmvp.http.HjzHttp;
 import com.campus.huanjinzi.campusmvp.http.HjzStreamReader;
 import com.campus.huanjinzi.campusmvp.http.Params;
-import com.campus.huanjinzi.campusmvp.utils.MyLog;
+import com.campus.huanjinzi.campusmvp.utils.Hlog;
 import java.io.InputStream;
 import java.net.URLDecoder;
 
@@ -14,6 +14,7 @@ import java.net.URLDecoder;
  */
 public class WifiLanderTask {
 
+    private static final String TAG = "WifiLanderTask";
     private Params params = Params.getInstance();
     private static WifiLanderTask wifiLanderTask = new WifiLanderTask();
 
@@ -36,44 +37,41 @@ public class WifiLanderTask {
     }
 
     /*在寝室(Dorm)登录校园网wifi*/
-    public boolean loginDorm(String username, String password) throws Exception {
-        //// TODO: 2016/8/20 还没有进行功能测试
+    public int loginDorm(String username, String password) throws Exception {
+
         boolean status = false;
         params.setUrl(Constants.LOGIN_DORM_URL);
         params.setForm(Constants.getLoginDormForm(username, password));
         InputStream in = HjzHttp.getInstance().post(params);
         StringBuilder sb = HjzStreamReader.getString(in);
-        MyLog.log(sb.toString());
-        try {
-            status = sb.substring(4100,4400).contains(URLDecoder.decode(Constants.DORM_SUCCESS,"utf-8"));
+        status = sb.toString().contains(Constants.DORM_SUCCESS);
+        if(status)
+        {
+            return 1;
         }
-        catch (Exception e) {
-            if (e instanceof StringIndexOutOfBoundsException) {
-                status = false;
-            }
+        status = sb.toString().contains(Constants.HAS_LOGED_DORRM);
+        if(status)
+        {
+            return 0;
         }
-        return status;
+        return -1;
     }
     /*在教室(Class)登录校园网wifi(GB2312)*/
-    public boolean loginClass(String username, String password) throws Exception {
-
-        boolean status = false;
+    public int loginClass(String username, String password) throws Exception {
         params.setUrl(Constants.LOGIN_CLASS_URL);
         params.setForm(Constants.getLoginClassForm(username, password));
         InputStream in = HjzHttp.getInstance().post(params);
         if (in != null) in.close();
         params.setUrl(Constants.getLoginClassUrl(username));
         in = HjzHttp.getInstance().get(params);
-        if (in == null) return false;
+        if(in == null){ return -1;}
         StringBuilder sb = HjzStreamReader.getString(in,"gb2312");
-        try {
-            status = sb.substring(1500).contains(username);
+        if(sb.toString().contains(username)){
+            return 1;
         }
-        catch (Exception e) {
-            if (e instanceof StringIndexOutOfBoundsException) {
-                status = false;
-            }
+        else if(sb.toString().contains(Constants.HAS_LOGED_CLASS)){
+            return 0;
         }
-        return status;
+        return -1;
     }
 }

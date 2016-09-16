@@ -1,7 +1,7 @@
 package com.campus.huanjinzi.campusmvp;
 
 import com.campus.huanjinzi.campusmvp.swuwifi.Remote.WifiLanderTask;
-import com.campus.huanjinzi.campusmvp.utils.MyLog;
+import com.campus.huanjinzi.campusmvp.utils.Hlog;
 
 import org.junit.Test;
 
@@ -12,27 +12,27 @@ public class WifiLanderTaskTest {
 
     @Test
     public void loginClass() throws Exception {
-        boolean is = false;
+        /*boolean is = false;
         try {
             is = WifiLanderTask.getInstance().loginClass("huanjinzi", "197325");
         } catch (Exception e) {
 
-            MyLog.log(e.getClass().getName());
+            Hlog.log(e.getClass().getName());
             is = false;
         }
-        System.out.println(is);
+        System.out.println(is);*/
     }
 
     @Test
     public void loginDorm() throws Exception {
-        boolean is = false;
+       /* boolean is = false;
         try {
             is = WifiLanderTask.getInstance().loginDorm("huanjinzi", "197325");
         } catch (Exception e) {
-            MyLog.log(e.getClass().getName());
+            Hlog.log(e.getClass().getName());
             is = false;
         }
-        System.out.println(is);
+        System.out.println(is);*/
     }
 
     @Test

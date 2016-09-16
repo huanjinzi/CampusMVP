@@ -81,9 +81,6 @@ public final class Constants {
         return "username=" + username + "&password=" + password + "&if_login=Y&B2=%B5%C7%C2%BC%28Login%29";
     }
 
-    /*寝室登录成功返回的字段*/
-    public static final String DORM_SUCCESS = "%E7%99%BB%E5%BD%95%E6%88%90%E5%8A%9F";
-
     /*获取基本信息的 url*/
     public static final String YZSFWMH_URL = "http://i.swu.edu.cn/remote/service/process";
 
@@ -101,8 +98,12 @@ public final class Constants {
     /**campus程序字段*/
 
 
+    /*寝室登录成功返回的字段*/
+    public static final String DORM_SUCCESS = "登录成功";
     public static final String NOT_LOGIN = "现在没有登录";
     public static final String LOG_OUT_SUCCESS = "成功退出";
+    public static final String HAS_LOGED_DORRM = "You are already logged in";
+    public static final String HAS_LOGED_CLASS = "账号已在其他计算机上登录";
 
 
 }

@@ -1,6 +1,6 @@
 package com.campus.huanjinzi.campusmvp.http;
 
-import com.campus.huanjinzi.campusmvp.utils.MyLog;
+import com.campus.huanjinzi.campusmvp.utils.Hlog;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -35,15 +35,13 @@ public class HjzHttp implements IHjzHttp {
 
     @Override
     public InputStream post(Params params) throws Exception {
-        MyLog.log(this.getClass().getName(), "post", "in()");
-        MyLog.log(this.getClass().getName(), "post", params.getUrl());
+
         OutputStream os = null;
         InputStream in = null;
 
         try {
             URL url = new URL(params.getUrl());
             hostname = url.getHost();
-            MyLog.log(hostname);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
             /*判断请求是否需要cookie，需要在setRequestMethod("POST")之前*/
@@ -54,10 +52,10 @@ public class HjzHttp implements IHjzHttp {
                     StringBuilder sb = new StringBuilder();
                     cookie = cookiemap.get(hostname);
                     sb.append(cookie.getName() + "=" + cookie.getValue());
-                    MyLog.log("Request-Cookie:" + sb.toString());
                     con.setRequestProperty("Cookie", sb.toString());
                 }
 
+                con.setRequestProperty("Connection","keep-alive");
                 con.setRequestMethod("POST");
                 con.setReadTimeout(10 * 1000);
                 con.setConnectTimeout(10 * 1000);
@@ -76,7 +74,6 @@ public class HjzHttp implements IHjzHttp {
                     if (con.getHeaderFields().get("Set-Cookie") != null) {
                         //cookie存在，获取cookie
                         HttpCookie httpcookie = HttpCookie.parse(con.getHeaderFields().get("Set-Cookie").get(0)).get(0);
-                        MyLog.log("Response-Cookie:" + httpcookie.getName() + "=" + httpcookie.getValue());
                         cookiemap.put(hostname, httpcookie);
                     }
                     in = con.getInputStream();
@@ -87,19 +84,15 @@ public class HjzHttp implements IHjzHttp {
                 os.close();
             }
         }
-        MyLog.log(this.getClass().getName(), "post", "exit()");
         return in;
     }
 
     @Override
     public InputStream get(Params params) throws Exception {
 
-        MyLog.log(this.getClass().getName(), "get", "in()");
-        MyLog.log(this.getClass().getName(), "get", params.getUrl());
         InputStream in = null;
         URL url = new URL(params.getUrl());
         hostname = url.getHost();
-        MyLog.log(hostname);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
         /*判断请求是否需要cookie，需要在setRequestMethod("POST")之前*/
@@ -110,7 +103,6 @@ public class HjzHttp implements IHjzHttp {
                 StringBuilder sb = new StringBuilder();
                 cookie = cookiemap.get(hostname);
                 sb.append(cookie.getName() + "=" + cookie.getValue());
-                MyLog.log("Request-Cookie:" + sb.toString());
                 con.setRequestProperty("Cookie", sb.toString());
             }
         }
@@ -129,12 +121,11 @@ public class HjzHttp implements IHjzHttp {
             if (con.getHeaderFields().get("Set-Cookie") != null) {
                 //cookie存在，获取cookie
                 HttpCookie httpcookie = HttpCookie.parse(con.getHeaderFields().get("Set-Cookie").get(0)).get(0);
-                MyLog.log("Response-Cookie:" + httpcookie.getName() + "=" + httpcookie.getValue());
                 cookiemap.put(hostname, httpcookie);
             }
             in = con.getInputStream();
         }
-        MyLog.log(this.getClass().getName(), "get", "exit()");
+
         return in;
     }
 

@@ -1,5 +1,6 @@
 package com.campus.huanjinzi.campusmvp.LogTask;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.renderscript.ScriptGroup;
 import android.support.design.widget.Snackbar;
@@ -13,7 +14,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.campus.huanjinzi.campusmvp.MyApp;
 import com.campus.huanjinzi.campusmvp.R;
+import com.campus.huanjinzi.campusmvp.SwuTask.SwuPresenter;
 
 /**
  * A login screen that offers login via email/password.
@@ -33,8 +36,9 @@ public class LogActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        presenter = LogPresenter.getInstance();
-        presenter.setContext(LogActivity.this);
+
+        presenter = new LogPresenter(LogActivity.this);
+        SharedPreferences sp = getSharedPreferences(MyApp.SPREF,0);
 
         mode = getIntent().getExtras().getInt(getString(R.string.MODE));
         title = getIntent().getExtras().getString(getString(R.string.TITLE));
@@ -47,6 +51,10 @@ public class LogActivity extends AppCompatActivity {
 
         username = (AutoCompleteTextView) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
+        if (sp.getBoolean(SwuPresenter.HAS_COUNT,false)){
+            username.setText(sp.getString(SwuPresenter.USERNAME,""));
+            password.setText(sp.getString(SwuPresenter.PASSWORD,""));
+        }
 
         final Button mbutton = (Button) findViewById(R.id.email_sign_in_button);
         mbutton.setText(button);

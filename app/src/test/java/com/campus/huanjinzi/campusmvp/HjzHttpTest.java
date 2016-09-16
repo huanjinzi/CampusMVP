@@ -134,4 +134,14 @@ public class HjzHttpTest {
         System.out.println(sb);
 
     }
+
+    @Test
+    public void github()throws Exception{
+        HjzHttp hjz = HjzHttp.getInstance();
+        Params params = Params.getInstance();
+        params.setUrl("http://github.com/huanjinzi/CampusMVP/blob/master/app/src/main/java/com/campus/huanjinzi/campusmvp/data/StudentSource.java");
+        InputStream in = hjz.get(params);
+        StringBuilder sb = HjzStreamReader.getString(in, "gb2312");
+        System.out.println(sb);
+    }
 }

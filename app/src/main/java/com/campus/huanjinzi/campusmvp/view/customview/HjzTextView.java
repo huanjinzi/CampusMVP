@@ -9,7 +9,7 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.campus.huanjinzi.campusmvp.utils.MyLog;
+import com.campus.huanjinzi.campusmvp.utils.Hlog;
 
 /**
  * Created by huanjinzi on 2016/8/22.
@@ -36,7 +36,6 @@ public class HjzTextView extends View {
 
     public HjzTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        MyLog.log("初始化");
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mHandler = new Handler(){
             @Override
@@ -68,7 +67,7 @@ public class HjzTextView extends View {
     protected void onDraw(Canvas canvas) {
 
 
-        //MyLog.log(canvas.getHeight()/2+"--"+canvas.getWidth()/2);
+        //Hlog.log(canvas.getHeight()/2+"--"+canvas.getWidth()/2);
         if(degree == 360)
         {degree =0;}
         canvas.translate(getWidth()/2,getHeight()/2);
