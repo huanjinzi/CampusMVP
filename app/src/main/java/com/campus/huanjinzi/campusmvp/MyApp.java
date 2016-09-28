@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class MyApp extends Application {
     public static final String SPREF = "user";
+    public static boolean HAS_LOGED = false;
     @Override
     public void onCreate() {
         super.onCreate();

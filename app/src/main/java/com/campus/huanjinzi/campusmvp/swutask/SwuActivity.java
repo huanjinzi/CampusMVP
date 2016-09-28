@@ -1,6 +1,8 @@
 package com.campus.huanjinzi.campusmvp.SwuTask;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+
 import com.campus.huanjinzi.campusmvp.LogTask.LogActivity;
 import com.campus.huanjinzi.campusmvp.MyApp;
 import com.campus.huanjinzi.campusmvp.R;
@@ -19,48 +22,44 @@ import com.campus.huanjinzi.campusmvp.utils.Hlog;
 import com.campus.huanjinzi.campusmvp.view.customview.ProgressView;
 
 public class SwuActivity extends AppCompatActivity {
-    public static final String TAG = "SwuActivity";
 
-    private boolean isFirsttimeDoLogTask = true;
+    public static final String LOGIN_SUCCESS ="com.campus.huanjinzi.campusmvp.LOGIN_SUCCESS";
+    public static final String LOGOUT_SUCCESS ="com.campus.huanjinzi.campusmvp.LOGOUT_SUCCESS";
+    public static final String LOGTASK_FAILURE ="com.campus.huanjinzi.campusmvp.LOGTASK_FAILURE";
+    public static final String LOGTASK_DONE ="com.campus.huanjinzi.campusmvp.LOGTASK_DONE";
+
+
     private Toolbar toolbar;
     private SwuPresenter presenter;
     private Intent intent;
+    private BroadcastReceiver receiver;
 
-    public RelativeLayout getTabs() {
-        return tabs;
-    }
+    public ProgressView getProgress() {return progress;}
 
-    private RelativeLayout tabs;
     private ProgressView progress;
 
+    private boolean TASK_DONE = true;
+    public boolean isTaskDone() {return TASK_DONE;}
+    public void setTaskDone(boolean TASK_DONE) {this.TASK_DONE = TASK_DONE;}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("huanjinzi", "onCreate");
         setContentView(R.layout.swu_activity);
 
-        presenter = new SwuPresenter(SwuActivity.this);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("campus");
-        setSupportActionBar(toolbar);
 
-        tabs = (RelativeLayout) findViewById(R.id.tabs);
-        presenter.setView(tabs);
 
-        if(savedInstanceState != null){
-            if(savedInstanceState.getBoolean(SwuPresenter.HAS_LOGED,false)){
-                tabs.setBackgroundColor(getResources().getColor(R.color.GREEN));
-            }}
-        else if(getSharedPreferences(MyApp.SPREF,0).getBoolean(SwuPresenter.HAS_COUNT,false)){
-            if(getSharedPreferences(MyApp.SPREF,0).getBoolean(SwuPresenter.HAS_LOGED,false)){
-                Hlog.i(TAG,"---->firstlaunch()");
-                presenter.firstlaunch();
-            }
-        }
+        //toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //toolbar.setTitle("campus");
+        //setSupportActionBar(toolbar);
+
         ListView listView = (ListView) findViewById(R.id.swu_listview);
         progress = (ProgressView) findViewById(R.id.progess);
+        progress.Clickable(true);
+        presenter = new SwuPresenter(SwuActivity.this);
+        presenter.setView(progress);
+
         ListViewAdapter adapter = new ListViewAdapter(SwuActivity.this);
 
         listView.setAdapter(adapter);
@@ -75,15 +74,11 @@ public class SwuActivity extends AppCompatActivity {
         progress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                boolean isLogTaskDone  = presenter.isLogTaskDone();
-                if(isLogTaskDone || isFirsttimeDoLogTask){
-                    Hlog.i(TAG,"开始执行登陆操作");
-                    isFirsttimeDoLogTask = false;
+                if(isTaskDone())
+                {
+                    setTaskDone(false);
+                    progress.setDrawsin(true);
                     presenter.logTask();
-                }
-                else {
-                    Hlog.i(TAG,"正在登陆，请等待这次Task完成");
                 }
             }
         });
@@ -92,7 +87,7 @@ public class SwuActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -102,12 +97,12 @@ public class SwuActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.exchange_user:
-                intent = new Intent(SwuActivity.this,LogActivity.class);
+                intent = new Intent(SwuActivity.this, LogActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString(getString(R.string.TITLE), getString(R.string.exchange_user));
                 bundle.putString(getString(R.string.BUTTON), getString(R.string.EXCHANGE));
                 intent.putExtras(bundle);
-                this.startActivityForResult(intent,0);
+                this.startActivityForResult(intent, 0);
                 break;
             case R.id.current_user:
 
@@ -117,31 +112,37 @@ public class SwuActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data != null) {
-            Bundle bundle = data.getExtras();
-            if (bundle != null) {
-                if (bundle.getBoolean(SwuPresenter.SUCCESS)) {
-                    Hlog.i(TAG,"(返回到Swuactivity)账号 登陆 成功");
-                    presenter.setLogTaskDone(true);
-                    tabs.setBackgroundColor(getResources().getColor(R.color.GREEN));
-                    Snackbar.make(tabs, "账号登陆成功", Snackbar.LENGTH_LONG).show();
-                }
-                else if(bundle.getBoolean(SwuPresenter.LOGOUT_SUCCESS)){
-                    Hlog.i(TAG,"(返回到Swuactivity)账号 退出 成功");
-
-                    if(bundle.getBoolean(SwuPresenter.LOGOUT_SUCCESS_SAME)){
-                        Hlog.i(TAG,"(返回到Swuactivity)账号 退出 成功(退出的是当前账号)");
-                        presenter.setLogTaskDone(true);
-                        tabs.setBackgroundColor(getResources().getColor(R.color.GREY_900));
-                    }
-                }
-            }
-
-        }
+    protected void onResume() {
+        super.onResume();
+        //注册广播
+        IntentFilter filter = new IntentFilter(LOGIN_SUCCESS);
+        filter.addAction(LOGOUT_SUCCESS);
+        filter.addAction(LOGTASK_FAILURE);
+        filter.addAction(LOGTASK_DONE);
+        receiver = new BroadcastReceiverHelper();
+        registerReceiver(receiver,filter);
     }
+
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(SwuPresenter.HAS_LOGED,getSharedPreferences(MyApp.SPREF,0).getBoolean(SwuPresenter.HAS_LOGED,false));
+    protected void onPause() {
+        super.onPause();
+        //取消注册
+        /*unregisterReceiver(receiver);*/
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
     }
 }

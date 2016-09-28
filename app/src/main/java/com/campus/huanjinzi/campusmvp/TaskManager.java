@@ -101,12 +101,8 @@ public class TaskManager {
                 Message message = new Message();
                 Bundle bundle = new Bundle();
                 try {
-                    boolean result = WifiLander.logout(username, password);
-                    if (result) {
-                        bundle.putInt(SwuPresenter.RESULT, 1);
-                    } else {
-                        bundle.putInt(SwuPresenter.RESULT, 0);
-                    }
+                    int result = WifiLander.logout(username, password);
+                    bundle.putInt(SwuPresenter.RESULT, result);
                     bundle.putInt(SwuPresenter.MODE, mode);
                     message.setData(bundle);
                     mHander.sendMessage(message);

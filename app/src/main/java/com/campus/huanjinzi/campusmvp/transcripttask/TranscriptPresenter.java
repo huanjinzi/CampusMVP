@@ -65,13 +65,13 @@ public class TranscriptPresenter {
                             FileOutputStream os = new FileOutputStream(context.getCacheDir().getPath() + "\\cj.ser");
                             ObjectOutputStream oos = new ObjectOutputStream(os);
                             oos.writeObject(cj);
-                            Hlog.i(TAG, "保存成绩对象到：" + context.getCacheDir().getPath() + "cj.ser");
+                            Hlog.i(TAG, "保存成绩对象到：" + context.getCacheDir().getPath() + "\\cj.ser");
                         } catch (IOException e) {
-                            e.printStackTrace();
+
                         }
                         break;
                     case -1:
-                        //Snackbar.make(view.getExcel(), "成绩获取失败", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(null, "成绩获取失败", Snackbar.LENGTH_LONG).show();
                         break;
                 }
             }
@@ -80,14 +80,12 @@ public class TranscriptPresenter {
 
     public void doTask() {
 
-        if (sp.getBoolean(SwuPresenter.HAS_COUNT, false)) {
-
             if (sp.getBoolean(HAS_TRANSCRIPT, false)) {
                 try {
                     FileInputStream is = new FileInputStream(context.getCacheDir().getPath() + "\\cj.ser");
                     ObjectInputStream ois = new ObjectInputStream(is);
                     cj = (StudentCj) ois.readObject();
-                    //updateData(cj);
+
                     Hlog.i(TAG, "读取成绩对象：" + context.getCacheDir().getPath() + "cj.ser");
                     Hlog.i(TAG, cj.getData().getGetDataResponse().getReturnX().getBody().getItems().get(0).getKcmc());
 
@@ -102,19 +100,6 @@ public class TranscriptPresenter {
                 task.setHander(mHandler);
                 task.getStudentCj(username, password);
             }
-        }
-        else
-        {
-
-            Intent intent = new Intent(context, LogActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putInt(context.getString(R.string.MODE), SwuPresenter.isSwuWifi(context));
-            bundle.putString(context.getString(R.string.TITLE), "登陆");
-            bundle.putString(context.getString(R.string.BUTTON), "登陆");
-            intent.putExtras(bundle);
-            context.startActivity(intent);
-        }
-
     }
 
     private void updateData(StudentCj cj){

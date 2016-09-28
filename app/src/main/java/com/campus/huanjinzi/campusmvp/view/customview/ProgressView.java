@@ -19,6 +19,10 @@ public class ProgressView extends View {
     private Paint mpaint;
     private boolean flag = false;
     private boolean drawcircle = false;
+
+    private boolean drawsin = false;
+    public void setDrawsin(boolean drawsin) {this.drawsin = drawsin;}
+
     private boolean drawrect = false;
     private OnClickListener mOnClickListener;
     private OnLongClickListener mOnLongClickListener;
@@ -55,8 +59,9 @@ public class ProgressView extends View {
     private int j = 20;//点击控件初始圆的大小，默认j*j=100
     private int k = 0;
 
-    private int sin_a = 50;
+    private int sin_a = 40;
     private int base_line = 150;
+    private boolean base_line_flag = true;
     private float x = 0;
     private float y = 0;
 
@@ -103,14 +108,14 @@ public class ProgressView extends View {
             canvas.drawRect(0, 0, Width, getHeight(), mpaint);
         }
         /**正在登陆的波浪效果*/
-        mpaint.setColor(0x33ffffff);
+        mpaint.setColor(0x22ffffff);
         mpaint.setStyle(Paint.Style.FILL);
         mpaint.setStrokeWidth(2);
         drawSin(canvas, Width, Height);
     }
 
     private void drawSin(Canvas canvas, float Width, float Height) {
-        if (true) {
+        if (drawsin) {
 
             if (k <= -Width) {
                 k = 0;
@@ -118,17 +123,23 @@ public class ProgressView extends View {
             Path path = new Path();
             path.moveTo(k, Height - base_line);
 
-            /**整体偏移j个位移*/
+            /**整体偏移k个位移*/
             path.quadTo(Width / 4 + k, Height - base_line - sin_a, Width / 2 + k, Height - base_line);
             path.quadTo(Width / 4 * 3 + k, Height - base_line + sin_a, Width + k, Height - base_line);
 
             path.quadTo(Width / 4 * 5 + k, Height - base_line - sin_a, Width / 2 * 3 + k, Height - base_line);
             path.quadTo(Width / 4 * 7 + k, Height - base_line + sin_a, Width * 2 + k, Height - base_line);
+
             path.lineTo(Width*2,Height);
             path.lineTo(0,Height);
             path.close();
             canvas.drawPath(path, mpaint);
             k -= 6;
+
+            if(base_line_flag){base_line+=2;}
+            else {base_line-=2;}
+            if(base_line <150){ base_line_flag = true;}
+            if(base_line > Height){base_line_flag = false;}
         }
     }
     private long time = 0;
@@ -176,7 +187,7 @@ public class ProgressView extends View {
     }
 
 
-    private boolean clickable = true;
+    private boolean clickable = false;
 
     public void Clickable(boolean clickable) {
         this.clickable = clickable;

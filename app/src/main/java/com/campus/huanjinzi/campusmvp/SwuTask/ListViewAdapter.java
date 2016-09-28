@@ -16,15 +16,15 @@ import com.campus.huanjinzi.campusmvp.R;
 public class ListViewAdapter extends BaseAdapter{
     private int[] id = {
             R.mipmap.ic_exit_to_app_grey600_24dp,
-            R.mipmap.ic_credit_card_grey600_24dp,
+            R.mipmap.ic_repeat_grey600_24dp,
             R.mipmap.ic_pageview_grey600_24dp,
-            R.mipmap.ic_assignment_grey600_24dp,
+            R.mipmap.ic_person_outline_grey600_24dp,
             R.mipmap.ic_help_grey600_24dp};
     private String[] str = {
             "账号退出",
-            "网费充值",
+            "切换账号",
             "成绩查询",
-            "上网记录",
+            "个人信息",
             "关于软件"
     };
     private LayoutInflater mInflater = null;

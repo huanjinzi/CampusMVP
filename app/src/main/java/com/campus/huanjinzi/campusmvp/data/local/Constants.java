@@ -104,6 +104,8 @@ public final class Constants {
     public static final String LOG_OUT_SUCCESS = "成功退出";
     public static final String HAS_LOGED_DORRM = "You are already logged in";
     public static final String HAS_LOGED_CLASS = "账号已在其他计算机上登录";
+    public static final String USER_NAME = "用户名";
+    public static final String IP = "IP地址";
 
 
 }
