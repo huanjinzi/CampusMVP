@@ -27,9 +27,7 @@ import com.campus.huanjinzi.campusmvp.SwuTask.SwuPresenter;
 import com.campus.huanjinzi.campusmvp.utils.Hlog;
 import com.campus.huanjinzi.campusmvp.view.customview.ProgressView;
 
-/**
- * A login screen that offers login via email/password.
- */
+
 public class LogActivity extends AppCompatActivity {
 
     public static final String TASK_DONE= "com.campus.huanjinzi.campusmvp.LogActivity.TASK_DONE";

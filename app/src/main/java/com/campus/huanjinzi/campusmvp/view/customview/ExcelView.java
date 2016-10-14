@@ -82,11 +82,9 @@ public class ExcelView extends View {
 
         itemsList = new ArrayList();
         mpaint = new Paint();
-        mpaint.setStyle(Paint.Style.STROKE);
         mpaint.setAntiAlias(true);
         mpaint.setSubpixelText(true);
         mpaint.setStrokeWidth(3);
-        mpaint.setTextSize(textsize);
         mpaint.setTextAlign(Paint.Align.CENTER);
     }
 
@@ -116,7 +114,6 @@ public class ExcelView extends View {
 
         if (itemsList.size() != 0) {
             mpaint.setTextSize(40);
-            mpaint.setColor(Color.BLACK);
             row = itemsList.size();
             rank = 4;//课程名称、分数、学分、选修还是必修、绩点
             String[] str = {"课程名称", "成绩", "学分", "绩点"};
@@ -125,6 +122,7 @@ public class ExcelView extends View {
             int[] flag = new int[row];//用来记录是否应该扩展行高
             canvas.translate(25, 60);
 
+            mpaint.setTextSize(45);
             /**表头绘制*/
             for (int m = 0; m < 4; m++) {
 
@@ -134,9 +132,6 @@ public class ExcelView extends View {
 
                 mpaint.setColor(getResources().getColor(R.color.GREEN));
                 mpaint.setStyle(Paint.Style.FILL);
-                canvas.drawRect(1, 1, rankw[m] - 1, rowh[0] - 1, mpaint);
-
-                mpaint.setColor(Color.WHITE);
                 canvas.drawText(str[m], rankw[m] / 2, (rowh[0] + textsize) / 2, mpaint);
 
                 canvas.translate(rankw[m], 0);
@@ -146,8 +141,8 @@ public class ExcelView extends View {
 
 
             excel_h = 0;
-            mpaint.setColor(Color.GRAY);
 
+            mpaint.setTextSize(textsize);
             /**表格绘制*/
             for (int i = 0; i < rank; i++) {
                 for (int j = 0; j < row; j++) {
@@ -166,7 +161,7 @@ public class ExcelView extends View {
                         }
 
                     } catch (Exception e) {
-                        if (cj.toUpperCase().equals("C") || cj.toUpperCase().equals("D")) {
+                        if (cj.toUpperCase().equals("D")) {
                             mpaint.setColor(Color.RED);
                         } else {
                             mpaint.setColor(Color.GRAY);

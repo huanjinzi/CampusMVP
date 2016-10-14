@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/GREY_200"
     tools:context="com.campus.huanjinzi.campusmvp.InfoTask.InfoActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -23,5 +24,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_info" />
+
+
 
 </android.support.design.widget.CoordinatorLayout>

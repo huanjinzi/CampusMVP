@@ -3,6 +3,7 @@ package com.campus.huanjinzi.campusmvp.data;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -145,7 +146,7 @@ public class StudentInfo {
                         this.items = items;
                     }
 
-                    public static class ItemsBean {
+                    public static class ItemsBean implements Serializable{
                         private String id;
                         private String xm;
                         private String mz;

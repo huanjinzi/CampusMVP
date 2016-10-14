@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
 
     <application
         android:allowBackup="true"
@@ -16,8 +17,9 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".SwuTask.SwuActivity"
+            android:alwaysRetainTaskState="true"
             android:label="@string/app_name"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Swu_Theme">
             <intent-filter>
@@ -26,14 +28,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--
+
         <receiver android:name=".SwuTask.BroadcastReceiverHelper">
             <intent-filter>
-                <action android:name="com.campus.huanjinzi.campusmvp.LOGIN_SUCCESS"/>
-                <action android:name="com.campus.huanjinzi.campusmvp.LOGOUT_SUCCESS"/>
+                <action android:name="com.campus.huanjinzi.campusmvp.LOGIN_SUCCESS" />
+                <action android:name="com.campus.huanjinzi.campusmvp.LOGOUT_SUCCESS" />
+                <action android:name="com.campus.huanjinzi.campusmvp.LOGTASK_FAILURE" />
+                <action android:name="com.campus.huanjinzi.campusmvp.LOGTASK_DONE" />
             </intent-filter>
         </receiver>
-        -->
+
         <activity
             android:name=".LogTask.LogActivity"
             android:label="@string/app_name"
@@ -48,11 +52,8 @@
             android:name=".InfoTask.InfoActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <receiver
-            android:name=".LogTask.LogActivityReceiver"
-            android:enabled="true"
-            android:exported="true"></receiver>
+        <activity android:name=".AboutTask.AboutActivity" />
+        <activity android:name=".BaseActivity"></activity>
     </application>
 
 </manifest>

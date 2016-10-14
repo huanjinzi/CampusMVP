@@ -94,7 +94,7 @@ public class WifiLanderTask {
         String name = "class-"+format.format(Calendar.getInstance().getTime());
         File file= new File(Environment.getExternalStorageDirectory()+"/"+Environment.DIRECTORY_DOWNLOADS+"/campus/class/"+name+".txt");
         FileOutputStream os  = new FileOutputStream(file);
-        OutputStreamWriter osw = new OutputStreamWriter(os,"gb2312");
+        OutputStreamWriter osw = new OutputStreamWriter(os,"utf-8");
         osw.write(sb.toString().toCharArray());
         osw.close();
         if(sb.toString().contains(username) && sb.toString().contains(Constants.USER_NAME) && sb.toString().contains(Constants.IP)){

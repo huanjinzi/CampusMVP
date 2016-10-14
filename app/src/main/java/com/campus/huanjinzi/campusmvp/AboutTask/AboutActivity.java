@@ -1,13 +1,12 @@
-package com.campus.huanjinzi.campusmvp.InfoTask;
+package com.campus.huanjinzi.campusmvp.AboutTask;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
-import android.os.Bundle;
+import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,38 +14,26 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.campus.huanjinzi.campusmvp.InfoTask.InfoActivity;
+import com.campus.huanjinzi.campusmvp.InfoTask.InfoPresenter;
 import com.campus.huanjinzi.campusmvp.R;
 import com.campus.huanjinzi.campusmvp.SwuTask.SwuActivity;
-import com.campus.huanjinzi.campusmvp.data.StudentInfo.DataBean.GetDataResponseBean.ReturnBean.BodyBean.ItemsBean;
-import com.campus.huanjinzi.campusmvp.utils.Hlog;
+import com.campus.huanjinzi.campusmvp.data.StudentInfo;
 
 import static android.view.View.GONE;
+import static android.view.View.generateViewId;
 
-public class InfoActivity extends AppCompatActivity {
+public class AboutActivity extends AppCompatActivity {
+
     private RecyclerView recycler;
-
-    public RecyclerAdapter getAdapter() {
-        return adapter;
-    }
-
     private RecyclerAdapter adapter;
-
-    public RecyclerView getRecycler() {
-        return recycler;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Hlog.i("SWU","info"+getTaskId());
-        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        for (ActivityManager.AppTask task:
-                am.getAppTasks() ) {
-            Hlog.i("SWU", ""+task.getTaskInfo().baseActivity);
-        }
         setContentView(R.layout.activity_info);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
@@ -61,31 +48,74 @@ public class InfoActivity extends AppCompatActivity {
                 overridePendingTransition(0,android.R.anim.slide_out_right);
             }
         });
+
+        RelativeLayout content = (RelativeLayout) findViewById(R.id.layout_content);
+        content.setPadding(0,0,0,0);
+
         recycler = (RecyclerView) findViewById(R.id.recyclerview);
+
+        /**image view parent*/
+        RelativeLayout content1 = new RelativeLayout(this);
+        content1.setId(generateViewId());
+        RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        params2.addRule(RelativeLayout.ABOVE,recycler.getId());
+        content1.setLayoutParams(params2);
+
+
+        /**image view*/
+        ImageView imageview = new ImageView(this);
+        imageview.setImageResource(R.mipmap.ic_launcher);
+        imageview.setId(generateViewId());
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        params.addRule(RelativeLayout.CENTER_VERTICAL);
+
+        /**recycler view*/
+        RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) recycler.getLayoutParams();
+        params1.addRule(RelativeLayout.CENTER_VERTICAL);
+
+
+
+        content1.addView(imageview,params);
+        content.addView(content1);
 
         recycler.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         adapter = new RecyclerAdapter(this);
         recycler.setAdapter(adapter);
 
-        InfoPresenter presenter = new InfoPresenter(this);
-        presenter.doTask();
-
     }
 
     class RecyclerAdapter extends RecyclerView.Adapter<Holder> {
         private Context context;
-        private ItemsBean info;
-        private String[] title = {"姓名","性别","民族","生日","身份证","电话号码",
-        "入学日期","班级","专业","学院"};
-        private String[] content = {"姓名","性别","民族","生日","身份证","电话号码",
-                "入学日期","班级","专业","学院"};
+        private String[] title = {"使用说明","软件协议","项目地址","作者博客"};
+        private String[] content = {"","","Github","CSDN"};
         public RecyclerAdapter(Context context){this.context = context;}
         @Override
         public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(context).inflate(R.layout.info_listview_item,null);
             return new Holder(view);
         }
-
+        private void onItemClilck(int position){
+            Intent intent = null;
+            Uri uri = null;
+            switch (position)
+            {
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    uri = Uri.parse("https://github.com/huanjinzi/campusmvp");
+                    intent = new Intent(Intent.ACTION_VIEW,uri);
+                    startActivity(intent);
+                    break;
+                case 3:
+                    uri = Uri.parse("http://blog.csdn.net/qq_25923235");
+                    intent = new Intent(Intent.ACTION_VIEW,uri);
+                    startActivity(intent);
+                    break;
+            }
+        }
         @Override
         public void onBindViewHolder(Holder holder, final int position) {
             holder.itemView.setOnTouchListener(new View.OnTouchListener() {
@@ -100,55 +130,16 @@ public class InfoActivity extends AppCompatActivity {
                             v.setBackgroundColor(Color.WHITE);
                             break;
                         case  MotionEvent.ACTION_UP:
-                            Snackbar.make(v,"test"+position,Snackbar.LENGTH_LONG).show();
+                            onItemClilck(position);
                             v.setBackgroundColor(Color.WHITE);
                             break;
                     }
                     return true;
                 }
             });
-            if(info == null){
-            holder.getTitle().setText(title[position]);
-            holder.getContent().setText(content[position]);}
-            else {
-                switch (position)
-                {
-                    //"姓名","性别","学号","民族","政治面貌","籍贯","生日","身份证","电话号码",
-                    //"入学日期","班级","专业","学院"
-                    case 0:
-                        holder.getContent().setText(info.getXm());
-                        break;
-                    case 1:
-                        holder.getContent().setText(info.getXb());
-                        break;
-                    case 2:
-                        holder.getContent().setText(info.getMz());
-                        break;
-                    case 3:
-                        holder.getContent().setText(info.getCsrq());
-                        break;
-                    case 4:
-                        holder.getContent().setText(info.getZjh());
-                        break;
-                    case 5:
-                        holder.getContent().setText(info.getDh());
-                        break;
-                    case 6:
-                        holder.getContent().setText(info.getRxsj());
-                        break;
-                    case 7:
-                        holder.getContent().setText(info.getBj());
-                        break;
-                    case 8:
-                        holder.getContent().setText(info.getZy());
-                        break;
-                    case 9:
-                        holder.getContent().setText(info.getYx());
-                        break;
 
-                }
-                holder.getTitle().setText(title[position]);
-            }
+            holder.getTitle().setText(title[position]);
+            holder.getContent().setText(content[position]);
             if(position == title.length - 1){holder.getDivider().setVisibility(GONE);}
         }
 
@@ -156,8 +147,6 @@ public class InfoActivity extends AppCompatActivity {
         public int getItemCount() {
             return title.length;
         }
-
-        public void setData(ItemsBean info){this.info = info;}
     }
 
     class Holder extends RecyclerView.ViewHolder{
@@ -185,17 +174,5 @@ public class InfoActivity extends AppCompatActivity {
             content = (TextView) itemView.findViewById(R.id.content);
             divider = (TextView) itemView.findViewById(R.id.divider);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(0,android.R.anim.slide_out_right);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Hlog.i("SWU", ""+"info-Destroy()");
     }
 }

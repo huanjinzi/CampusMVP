@@ -2,6 +2,9 @@ package com.campus.huanjinzi.campusmvp.TranscriptTask;
 
 import android.content.Context;
 import android.content.Intent;
+
+import com.campus.huanjinzi.campusmvp.InfoTask.InfoPresenter;
+import com.campus.huanjinzi.campusmvp.data.StudentInfo.DataBean.GetDataResponseBean.ReturnBean.BodyBean.ItemsBean;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +20,8 @@ import com.campus.huanjinzi.campusmvp.R;
 import com.campus.huanjinzi.campusmvp.SwuTask.SwuPresenter;
 import com.campus.huanjinzi.campusmvp.TaskManager;
 import com.campus.huanjinzi.campusmvp.data.StudentCj;
+import com.campus.huanjinzi.campusmvp.data.StudentInfo;
+import com.campus.huanjinzi.campusmvp.utils.FileUtil;
 import com.campus.huanjinzi.campusmvp.utils.Hlog;
 
 import java.io.FileInputStream;
@@ -56,22 +61,14 @@ public class TranscriptPresenter {
                 switch (bundle.getInt(RESULT)) {
                     case 1:
                         StudentCj cj = (StudentCj) bundle.getSerializable(STUDENTCJ);
+                        //ItemsBean info = (ItemsBean) bundle.getSerializable(InfoPresenter.INFO);
                         updateData(cj);
                         SharedPreferences.Editor editor = sp.edit();
                         editor.putBoolean(HAS_TRANSCRIPT, true);
                         editor.commit();
-                        /**保存成绩对象*/
-                        try {
-                            FileOutputStream os = new FileOutputStream(context.getCacheDir().getPath() + "\\cj.ser");
-                            ObjectOutputStream oos = new ObjectOutputStream(os);
-                            oos.writeObject(cj);
-                            Hlog.i(TAG, "保存成绩对象到：" + context.getCacheDir().getPath() + "\\cj.ser");
-                        } catch (IOException e) {
-
-                        }
                         break;
                     case -1:
-                        Snackbar.make(null, "成绩获取失败", Snackbar.LENGTH_LONG).show();
+                        //Snackbar.make(null, "成绩获取失败", Snackbar.LENGTH_LONG).show();
                         break;
                 }
             }
@@ -80,26 +77,34 @@ public class TranscriptPresenter {
 
     public void doTask() {
 
+
+        if(sp.getBoolean(SwuPresenter.EX_COUNT,false))
+        {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putBoolean(SwuPresenter.EX_COUNT,false);
+            editor.commit();
+
+            String username = sp.getString(SwuPresenter.USERNAME, "");
+            String password = sp.getString(SwuPresenter.PASSWORD, "");
+            TaskManager task = TaskManager.getInstance();
+            task.setHander(mHandler);
+            task.getStudentCj(context,username, password);
+        }
+        else
+        {
             if (sp.getBoolean(HAS_TRANSCRIPT, false)) {
-                try {
-                    FileInputStream is = new FileInputStream(context.getCacheDir().getPath() + "\\cj.ser");
-                    ObjectInputStream ois = new ObjectInputStream(is);
-                    cj = (StudentCj) ois.readObject();
-
-                    Hlog.i(TAG, "读取成绩对象：" + context.getCacheDir().getPath() + "cj.ser");
-                    Hlog.i(TAG, cj.getData().getGetDataResponse().getReturnX().getBody().getItems().get(0).getKcmc());
-
-                } catch (Exception e) {
-                    Hlog.i(TAG,e.getMessage());
-                }
-
-            } else {
+                FileUtil<StudentCj> fileUtil = new FileUtil<>();
+                cj = (StudentCj) fileUtil.get(context,"cj");
+            }
+            else {
                 String username = sp.getString(SwuPresenter.USERNAME, "");
                 String password = sp.getString(SwuPresenter.PASSWORD, "");
                 TaskManager task = TaskManager.getInstance();
                 task.setHander(mHandler);
-                task.getStudentCj(username, password);
+                task.getStudentCj(context,username, password);
             }
+        }
+
     }
 
     private void updateData(StudentCj cj){

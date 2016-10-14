@@ -1,13 +1,17 @@
 package com.campus.huanjinzi.campusmvp.SwuTask;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RelativeLayout;
 
+import com.campus.huanjinzi.campusmvp.MyApp;
 import com.campus.huanjinzi.campusmvp.R;
 import com.campus.huanjinzi.campusmvp.utils.Hlog;
 import com.campus.huanjinzi.campusmvp.view.customview.ProgressView;
+
+import static android.content.Context.ACTIVITY_SERVICE;
 
 /**
  * Created by huanjinzi on 2016/9/26.
@@ -16,7 +20,9 @@ import com.campus.huanjinzi.campusmvp.view.customview.ProgressView;
 public class BroadcastReceiverHelper extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        SwuActivity activity = (SwuActivity) context;
+        /*MyApp app = (MyApp) context.getApplicationContext();
+
+        SwuActivity activity = app.activity;
         RelativeLayout tab = (RelativeLayout) activity.findViewById(R.id.tabs);
 
         if(intent.getAction().equals(SwuActivity.LOGTASK_DONE))
@@ -37,7 +43,7 @@ public class BroadcastReceiverHelper extends BroadcastReceiver {
                 case SwuActivity.LOGTASK_FAILURE:
                     break;
             }
-        }
+        }*/
         Hlog.i("BroadcastReceiverHelper", context.toString() + intent.getAction());
     }
 }

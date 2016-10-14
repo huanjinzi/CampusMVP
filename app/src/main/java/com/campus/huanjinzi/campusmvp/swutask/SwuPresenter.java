@@ -14,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 
+import com.campus.huanjinzi.campusmvp.AboutTask.AboutActivity;
 import com.campus.huanjinzi.campusmvp.InfoTask.InfoActivity;
 import com.campus.huanjinzi.campusmvp.LogTask.LogActivity;
 import com.campus.huanjinzi.campusmvp.MyApp;
@@ -27,6 +28,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
+
 /**
  * Created by huanjinzi on 2016/8/25.
  */
@@ -34,6 +38,7 @@ public class SwuPresenter {
 
     public static final String TAG = "SwuPresenter";
     public static final String HAS_COUNT = "has_count";
+    public static final String EX_COUNT = "ex_count";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String RESULT = "result";
@@ -124,7 +129,7 @@ public class SwuPresenter {
                 startActivity(context,InfoActivity.class, "个人信息", null, 0);
                 break;
             case 4:
-                startActivity(context,InfoActivity.class, "关于软件", null, 0);
+                startActivity(context,AboutActivity.class, "关于软件", null, 0);
                 break;
 
         }
@@ -134,7 +139,7 @@ public class SwuPresenter {
 
         if (isSwuWifi(context) == -1)
         {
-            context.sendBroadcast(new Intent(SwuActivity.LOGTASK_DONE));
+
             showWifiSettings();//连接到校园网wifi，显示设置wifi界面
         }
         else
@@ -168,7 +173,9 @@ public class SwuPresenter {
             }
             else
             {
-                context.sendBroadcast(new Intent(SwuActivity.LOGTASK_DONE));
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(SwuActivity.WATER,false);
+                startSelf(bundle);
                 LogActivityLauch();//之前没有账号登陆
             }
         }
@@ -187,6 +194,12 @@ public class SwuPresenter {
         context.startActivity(intent);
     }
 
+    private void startSelf(Bundle bundle)
+    {
+        Intent intent = new Intent(context,SwuActivity.class);
+        intent.putExtras(bundle);
+        context.startActivity(intent);
+    }
     /**
      * 判断是否存在已经登陆的账号
      */
@@ -199,7 +212,9 @@ public class SwuPresenter {
      * 显示wifi设置界面
      */
     private void showWifiSettings() {
-        isLogTaskDone = true;
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(SwuActivity.WATER,false);
+        startSelf(bundle);
         Snackbar.make(view, context.getString(R.string.NOT_CONNECT_SWUWIFI), Snackbar.LENGTH_LONG).setActionTextColor(context.getResources().getColor(R.color.GREEN)).
                 setAction(R.string.WIFI_CONNECT, new View.OnClickListener() {
             @Override
@@ -247,31 +262,32 @@ public class SwuPresenter {
      */
     private void loginResult(int result) {
         WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(SwuActivity.WATER,false);
         switch (result) {
 
             case 0:
-                context.sendBroadcast(new Intent(SwuActivity.LOGTASK_DONE));
                 Snackbar.make(view, "账号在其他地方登陆,现在退出？", Snackbar.LENGTH_LONG).setActionTextColor(context.getResources().getColor(R.color.GREEN)).setAction("确认", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         taskManager.logout(username, password, LOG_OUT);
                     }
                 }).show();
+                startSelf(bundle);
                 break;
             case 1:
                 //测试网络是否可用
-                AsyncTask<Boolean,Object,Boolean> task = new NetPing();
-                task.execute(true);
-
+                TaskManager.getInstance().NetTest();
                 break;
             case -1:
-                context.sendBroadcast(new Intent(SwuActivity.LOGTASK_DONE));
+                startSelf(bundle);
                 Flags.getInstance().setHAS_LOGED(false);
                 manager.reassociate();
                 Snackbar.make(view, "登陆失败，请稍后重试", Snackbar.LENGTH_LONG).show();
                 break;
             case -2:
-                context.sendBroadcast(new Intent(SwuActivity.LOGTASK_DONE));
+
+                startSelf(bundle);
                 Snackbar.make(view, "网络超时", Snackbar.LENGTH_LONG).show();
                 break;
         }
@@ -284,73 +300,42 @@ public class SwuPresenter {
      * @param result 账号退出请求的返回结果，返回1成功，返回0失败，返回-1网络错误
      */
     private void logoutResult(int result) {
-        context.sendBroadcast(new Intent(SwuActivity.LOGTASK_DONE));
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(SwuActivity.WATER,false);
         switch (result) {
             case 0:
+                startSelf(bundle);
                 Snackbar.make(view, "退出账号失败，请稍后重试", Snackbar.LENGTH_LONG).show();
                 break;
             case 1:
+                Bundle bundle1 = new Bundle();
+                bundle1.putBoolean(SwuActivity.WATER,false);
+                bundle1.putBoolean(SwuActivity.GREEN,false);
+                startSelf(bundle1);
                 Flags.getInstance().setHAS_LOGED(false);
-                Intent intent = new Intent(SwuActivity.LOGOUT_SUCCESS);
-                context.sendBroadcast(intent);
                 Snackbar.make(view, "账号退出成功", Snackbar.LENGTH_LONG).show();
                 break;
             case -1:
+                startSelf(bundle);
                 Snackbar.make(view, "网络超时", Snackbar.LENGTH_LONG).show();
                 break;
         }
     }
-
-    public boolean Ping(String str) {
-        boolean resault = false;
-        Process p;
-        try {
-            //ping -c 3 -w 100  中  ，-c 是指ping的次数 3是指ping 3次 ，-w 100  以秒为单位指定超时间隔，是指超时时间为100秒
-            p = Runtime.getRuntime().exec("ping -c 3 -w 5 " + str);
-            int status = p.waitFor();
-
-            if (status == 0) {
-                resault = true;
-            } else {
-                resault = false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return resault;
-    }
-
-    private class NetPing extends AsyncTask<Boolean, Object, Boolean> {
-        @Override
-        protected Boolean doInBackground(Boolean...b) {
-            return Boolean.valueOf(Ping("www.baidu.com"));
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            Message message = new Message();
-            Bundle bundle = new Bundle();
-            bundle.putInt(MODE,LOGIN_TEST);
-            bundle.putBoolean("pass",aBoolean.booleanValue());
-            message.setData(bundle);
-            mHandler.sendMessage(message);
-        }
-    }
     /**network test*/
     private void networktest(boolean pass){
-        context.sendBroadcast(new Intent(SwuActivity.LOGTASK_DONE));
-        WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        Bundle bundle1 = new Bundle();
+        bundle1.putBoolean(SwuActivity.WATER,false);
+        startSelf(bundle1);
         if(pass)
         {
             Snackbar.make(view, "账号登陆成功", Snackbar.LENGTH_LONG).show();
             Flags.getInstance().setHAS_LOGED(true);
-            Intent intent = new Intent(SwuActivity.LOGIN_SUCCESS);
-            context.sendBroadcast(intent);
+            bundle1.putBoolean(SwuActivity.GREEN,true);
+            startSelf(bundle1);
         }
         else
         {
-            Snackbar.make(view, "登陆失败，请稍后重试", Snackbar.LENGTH_LONG).show();
-            manager.reassociate();
+            Snackbar.make(view, "wifi网络不可用", Snackbar.LENGTH_LONG).show();
         }
     }
 }

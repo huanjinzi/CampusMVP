@@ -89,7 +89,6 @@ public class LogPresenter {
      * @param result 账号退出请求的返回结果，返回1成功，返回0失败，返回-1网络错误
      */
     private void logoutResult(int result) {
-        context.sendBroadcast(new Intent(SwuActivity.LOGTASK_DONE));
         context.sendBroadcast(new Intent(LogActivity.TASK_DONE));
         switch (result) {
             case 0:
@@ -99,10 +98,16 @@ public class LogPresenter {
                 {
                     Snackbar.make(view, "账号退出成功", Snackbar.LENGTH_LONG).show();
                     Flags.getInstance().setHAS_LOGED(false);
-                    Intent intent = new Intent(SwuActivity.LOGOUT_SUCCESS);
+
                     if(context.getSharedPreferences(MyApp.SPREF,0).getString(SwuPresenter.USERNAME,"").trim().equals(musername.trim()))
                     {
-                        context.sendBroadcast(intent);
+                        LogActivity activity = (LogActivity) context;
+                        activity.finishAfterTransition();
+                        Intent intent = new Intent(context,SwuActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(SwuActivity.GREEN,false);
+                        intent.putExtras(bundle);
+                        context.startActivity(intent);
                     }
                 }
                 break;
@@ -118,7 +123,6 @@ public class LogPresenter {
      * 对登陆的结果进行处理
      */
     private void loginResult(int result) {
-        context.sendBroadcast(new Intent(SwuActivity.LOGTASK_DONE));
         context.sendBroadcast(new Intent(LogActivity.TASK_DONE));
         Intent intent;
         switch (result) {
@@ -131,23 +135,27 @@ public class LogPresenter {
                 }).show();
                 break;
             case 1:
-                Snackbar.make(view, "登陆成功，正在跳转...", Snackbar.LENGTH_LONG).show();
+
                 SharedPreferences sp = context.getSharedPreferences(MyApp.SPREF, 0);
                 SharedPreferences.Editor editor = sp.edit();
 
                 editor.putString(SwuPresenter.USERNAME, musername);
                 editor.putString(SwuPresenter.PASSWORD, mpassword);
                 editor.putBoolean(SwuPresenter.HAS_COUNT, true);
+                editor.putBoolean(SwuPresenter.EX_COUNT, true);
                 editor.commit();
 
-                intent = new Intent(SwuActivity.LOGIN_SUCCESS);
-                context.sendBroadcast(intent);
-                Flags.getInstance().setHAS_LOGED(true);
+                LogActivity activity = (LogActivity) context;
+                activity.finishAfterTransition();
                 intent = new Intent(context,SwuActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(SwuActivity.GREEN,true);
+                bundle.putBoolean(SwuActivity.WATER,false);
+                intent.putExtras(bundle);
                 context.startActivity(intent);
                 break;
             case -1:
-                Snackbar.make(view, "登陆失败，请稍后重试", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, "登陆失败，请确认用户名和密码正确，稍后再尝试登录!", Snackbar.LENGTH_LONG).show();
                 break;
             case -2:
                 Snackbar.make(view, "网络超时", Snackbar.LENGTH_LONG).show();
