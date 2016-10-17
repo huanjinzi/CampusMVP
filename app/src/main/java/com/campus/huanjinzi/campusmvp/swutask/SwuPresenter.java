@@ -8,15 +8,12 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,14 +29,6 @@ import com.campus.huanjinzi.campusmvp.TranscriptTask.TranscriptActivity;
 import com.campus.huanjinzi.campusmvp.swuwifi.LoginBean;
 import com.campus.huanjinzi.campusmvp.swuwifi.LogoutBean;
 import com.campus.huanjinzi.campusmvp.utils.Hlog;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
 /**
  * Created by huanjinzi on 2016/8/25.
@@ -84,6 +73,7 @@ public class SwuPresenter {
             @Override
             public void handleMessage(Message msg) {
                 SwuFlags.WATER = false;
+                activity.refreshState();
                 if (progressDialog != null) {
                     progressDialog.cancel();
                 }
@@ -95,10 +85,21 @@ public class SwuPresenter {
                     switch (bundle.getInt(LogConstants.MODE)) {
                         case LogConstants.LOG_IN:
                             login_bean = (LoginBean) bundle.getSerializable(LogConstants.RESULT);
-                            loginResult(login_bean);
+                            if(login_bean == null){
+                                snackbar(LogConstants.NETWORK_ERROR_STR);
+                            }
+                            else
+                            {
+                                loginResult(login_bean);
+                            }
                             break;
                         case LogConstants.LOG_OUT:
-                            logoutResult((LogoutBean) bundle.getSerializable(LogConstants.RESULT));
+                            LogoutBean logoutBean = (LogoutBean) bundle.getSerializable(LogConstants.RESULT);
+                            if(logoutBean == null){snackbar(LogConstants.NETWORK_ERROR_STR); }
+                            else
+                            {
+                                logoutResult(logoutBean);
+                            }
                             break;
                         case LogConstants.VALIDCODE:
                             Bitmap bitmap = bundle.getParcelable(LogConstants.RESULT);
@@ -163,7 +164,7 @@ public class SwuPresenter {
                 password = spref.getString(PASSWORD, "");
 
                 if (SwuFlags.HAS_LOGED) {
-                    taskManager.logout(spref.getString(LogConstants.USERINDEX, ""));
+                    taskManager.logout_all(username,password);
                 } else {
                     /**验证码处理*/
                     if (login_bean != null && login_bean.getValidCodeUrl().length() > 3) {

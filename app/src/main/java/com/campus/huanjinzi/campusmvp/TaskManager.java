@@ -41,8 +41,8 @@ public class TaskManager {
 
     private TaskManager() {
         pool = (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
-        pool.setCorePoolSize(2);
-        pool.setKeepAliveTime(10, TimeUnit.SECONDS);
+        pool.setCorePoolSize(4);
+        pool.setKeepAliveTime(20, TimeUnit.SECONDS);
     }
 
     /**类成员*/
@@ -68,7 +68,7 @@ public class TaskManager {
                     bundle.putSerializable(LogConstants.RESULT,result);
                     bundle.putInt(LogConstants.MODE, LogConstants.LOG_IN);
                     message.setData(bundle);
-                    mHander.sendMessageDelayed(message,2000);
+                    mHander.sendMessageDelayed(message,1000);
                 } catch (Exception e) {
                     Hlog.i(TAG,"login()"+e.getMessage());
                     mHander.sendEmptyMessage(LogConstants.NETWORK_ERROR);
@@ -92,7 +92,7 @@ public class TaskManager {
                     bundle.putSerializable(LogConstants.RESULT,result);
                     bundle.putInt(LogConstants.MODE, LogConstants.LOG_OUT);
                     message.setData(bundle);
-                    mHander.sendMessageDelayed(message,2000);
+                    mHander.sendMessageDelayed(message,1000);
 
                 } catch (Exception e) {
                     Hlog.i("TAG",".logout()"+e.getMessage());
@@ -111,7 +111,7 @@ public class TaskManager {
             public void run() {
                 Message message = new Message();
                 Bundle bundle = new Bundle();
-                LoginBean bean = new LoginBean();
+                LogoutBean bean = new LogoutBean();
 
                 String result;
                 try {
@@ -119,17 +119,17 @@ public class TaskManager {
                     bean.setResult(result);
                     if (result.contains("success"))
                     {
-                        bean.setMessage(LogConstants.LOGIN_SUCCESS_STR);
-                        bundle.putSerializable(LogConstants.RESULT,1);
+                        bean.setMessage(LogConstants.LOGOUT_SUCCESS_STR);
+                        bundle.putSerializable(LogConstants.RESULT,bean);
                     }
                     else
                     {
-                        bean.setMessage(LogConstants.LOGIN_FAIL_STR);
-                        bundle.putSerializable(LogConstants.RESULT,-1);
+                        bean.setMessage(LogConstants.LOGOUT_FAIL_STR);
+                        bundle.putSerializable(LogConstants.RESULT,bean);
                     }
                     bundle.putInt(LogConstants.MODE, LogConstants.LOG_OUT);
                     message.setData(bundle);
-                    mHander.sendMessageDelayed(message,2000);
+                    mHander.sendMessage(message);
 
                 } catch (Exception e) {
                     Hlog.i("TAG",".logout()"+e.getMessage());

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -79,7 +80,7 @@ public class AboutActivity extends AppCompatActivity {
         RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params3.addRule(RelativeLayout.BELOW,recycler.getId());
         TextView textView = new TextView(this);
-        textView.setTextSize(12);
+        textView.setTextSize(13);
         textView.setText("design by huanjinzi");
         //textView.setTextColor(getResources().getColor(R.color.GREEN));
         textView.setId(generateViewId());
@@ -103,7 +104,7 @@ public class AboutActivity extends AppCompatActivity {
 
     class RecyclerAdapter extends RecyclerView.Adapter<Holder> {
         private Context context;
-        private String[] title = {"使用说明","软件协议","项目地址","作者博客"};
+        private String[] title = {"获取新版本","软件协议","项目地址","作者博客"};
         private String[] content = {"","","Github","CSDN"};
         public RecyclerAdapter(Context context){this.context = context;}
         @Override
@@ -117,8 +118,17 @@ public class AboutActivity extends AppCompatActivity {
             switch (position)
             {
                 case 0:
+                    //
+                    uri = Uri.parse("https://github.com/huanjinzi/CampusMVP/tree/develop");
+                    intent = new Intent(Intent.ACTION_VIEW,uri);
+                    startActivity(intent);
                     break;
                 case 1:
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+                    builder.setMessage(context.getString(R.string.about));
+                    builder.setTitle("软件协议");
+                    builder.create().show();
                     break;
                 case 2:
                     uri = Uri.parse("https://github.com/huanjinzi/campusmvp");

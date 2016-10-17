@@ -25,6 +25,7 @@ import com.campus.huanjinzi.campusmvp.SwuTask.SwuFlags;
 import com.campus.huanjinzi.campusmvp.SwuTask.SwuPresenter;
 import com.campus.huanjinzi.campusmvp.TaskManager;
 import com.campus.huanjinzi.campusmvp.swuwifi.LoginBean;
+import com.campus.huanjinzi.campusmvp.swuwifi.LogoutBean;
 import com.campus.huanjinzi.campusmvp.utils.Hlog;
 
 /**
@@ -54,22 +55,31 @@ public class LogPresenter {
         mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
+
                 activity.sendBroadcast(new Intent(LogActivity.TASK_DONE));
                 if (progressDialog != null){progressDialog.cancel();}
                 if (msg.what == LogConstants.NETWORK_ERROR)
                 {
                     snackbar(LogConstants.NETWORK_ERROR_STR);
                 }
-                else {
+                else
+                {
                     Bundle bundle = msg.getData();
                     /**通过handler来与ui线程交互*/
                     switch (bundle.getInt(LogConstants.MODE)) {
                         case LogConstants.LOG_IN:
                             login_bean = (LoginBean) bundle.getSerializable(LogConstants.RESULT);
-                            loginResult(login_bean);
+                            if(login_bean == null)
+                            {
+                                snackbar(LogConstants.NETWORK_ERROR_STR);
+                            }
+                            else
+                            {
+                                loginResult(login_bean);
+                            }
                             break;
                         case LogConstants.LOG_OUT:
-                            logoutResult(bundle.getInt(LogConstants.RESULT));
+                            logoutResult((LogoutBean) bundle.getSerializable(LogConstants.RESULT));
                             break;
                         case LogConstants.VALIDCODE:
                             Bitmap bitmap = bundle.getParcelable(LogConstants.RESULT);
@@ -123,22 +133,13 @@ public class LogPresenter {
      *
      * @param result 账号退出请求的返回结果，返回1成功，返回0失败，返回-1网络错误
      */
-    private void logoutResult(int result) {
-        activity.sendBroadcast(new Intent(LogActivity.TASK_DONE));
-        switch (result) {
-            case 0:
-                snackbar(LogConstants.LOGOUT_FAIL_STR);
-                break;
-            case 1: {
-                snackbar(LogConstants.LOGOUT_SUCCESS_STR);
-                logoutSuccess();
-            }
-            break;
-        }
+    private void logoutResult(LogoutBean result) {
+        snackbar(result.getMessage());
     }
 
     private void validcodeResult(final Bitmap bitmap)
     {
+        if(dialog_validcode == null ){
         showDialog(new OnCreateDialogListener() {
             EditText editText = null;
             ImageView imageView = null;
@@ -157,6 +158,7 @@ public class LogPresenter {
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        snackbar("刷新验证码");
                         taskManager.getBitmap(bean.getValidCodeUrl());
                     }
                 });
@@ -164,6 +166,14 @@ public class LogPresenter {
                 builder.setView(view);
             }
         });
+        }
+        else if(dialog_validcode.isShowing())
+        {
+
+            ImageView image = (ImageView) dialog_validcode.findViewById(R.id.validvode_bitmap);
+            image.setImageBitmap(bitmap);
+
+        }
     }
 
     private void snackbar(String content){Snackbar.make(view, content, Snackbar.LENGTH_LONG).show();}
@@ -234,7 +244,6 @@ public class LogPresenter {
     /**退出成功处理*/
     private void logoutSuccess()
     {
-        Flags.getInstance().setHAS_LOGED(false);
         if (activity.getSharedPreferences(MyApp.SPREF, 0).getString(SwuPresenter.USERNAME, "").trim().equals(musername.trim()))
         {
             activity.finishAfterTransition();
@@ -265,8 +274,8 @@ public class LogPresenter {
                 listener.onOk();
             }
         });
-        if(dialog_validcode == null) {dialog_validcode =  builder.create();}
-        dialog_validcode.show();
+       dialog_validcode =  builder.create();
+       dialog_validcode.show();
     }
 
 }
