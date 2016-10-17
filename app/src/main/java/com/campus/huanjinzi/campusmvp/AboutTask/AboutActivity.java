@@ -104,8 +104,8 @@ public class AboutActivity extends AppCompatActivity {
 
     class RecyclerAdapter extends RecyclerView.Adapter<Holder> {
         private Context context;
-        private String[] title = {"获取新版本","软件协议","项目地址","作者博客"};
-        private String[] content = {"","","Github","CSDN"};
+        private String[] title = {"软件协议","作者博客","项目地址"};
+        private String[] content = {"","CSDN","新版本在Github上进行更新"};
         public RecyclerAdapter(Context context){this.context = context;}
         @Override
         public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -118,25 +118,19 @@ public class AboutActivity extends AppCompatActivity {
             switch (position)
             {
                 case 0:
-                    //
-                    uri = Uri.parse("https://github.com/huanjinzi/CampusMVP/tree/develop");
-                    intent = new Intent(Intent.ACTION_VIEW,uri);
-                    startActivity(intent);
-                    break;
-                case 1:
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                     builder.setMessage(context.getString(R.string.about));
                     builder.setTitle("软件协议");
                     builder.create().show();
                     break;
-                case 2:
-                    uri = Uri.parse("https://github.com/huanjinzi/campusmvp");
+                case 1:
+                    uri = Uri.parse("http://blog.csdn.net/qq_25923235");
                     intent = new Intent(Intent.ACTION_VIEW,uri);
                     startActivity(intent);
                     break;
-                case 3:
-                    uri = Uri.parse("http://blog.csdn.net/qq_25923235");
+                case 2:
+                    uri = Uri.parse("https://github.com/huanjinzi/campusmvp");
                     intent = new Intent(Intent.ACTION_VIEW,uri);
                     startActivity(intent);
                     break;
