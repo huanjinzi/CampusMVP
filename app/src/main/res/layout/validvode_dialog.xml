@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_below="@+id/title"
+        android:layout_height="wrap_content"
+        android:id="@+id/validvode_bitmap_parent"
+        >
+
+        <ImageView
+            android:id="@+id/validvode_bitmap"
+            android:layout_centerHorizontal="true"
+            android:layout_width="match_parent"
+            android:scaleType="fitCenter"
+            android:layout_height="40dp"
+            android:src="@mipmap/ic_launcher"/>
+        <TextView
+            android:text="点击图片刷新"
+            android:textSize="12sp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/validvode_bitmap"
+            android:textColor="@color/GREY_400"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <EditText
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_below="@id/validvode_bitmap_parent"
+        android:id="@+id/validvode_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:singleLine="true"
+        android:hint="请输入验证码"
+        style="@android:style/Widget.Material.Light.EditText" />
+
+</RelativeLayout>

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -64,7 +65,7 @@ public class AboutActivity extends AppCompatActivity {
 
         /**image view*/
         ImageView imageview = new ImageView(this);
-        imageview.setImageResource(R.mipmap.ic_launcher);
+        imageview.setImageResource(R.mipmap.ac_black);
         imageview.setId(generateViewId());
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_HORIZONTAL);
@@ -74,10 +75,25 @@ public class AboutActivity extends AppCompatActivity {
         RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) recycler.getLayoutParams();
         params1.addRule(RelativeLayout.CENTER_VERTICAL);
 
+        RelativeLayout author_parent = new RelativeLayout(this);
+        RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        params3.addRule(RelativeLayout.BELOW,recycler.getId());
+        TextView textView = new TextView(this);
+        textView.setTextSize(12);
+        textView.setText("design by huanjinzi");
+        //textView.setTextColor(getResources().getColor(R.color.GREEN));
+        textView.setId(generateViewId());
+        RelativeLayout.LayoutParams params4 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params4.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        params4.addRule(RelativeLayout.CENTER_VERTICAL);
 
+        author_parent.addView(textView,params4);
 
         content1.addView(imageview,params);
         content.addView(content1);
+        content.addView(author_parent,params3);
+
+
 
         recycler.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         adapter = new RecyclerAdapter(this);

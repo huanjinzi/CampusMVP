@@ -1,12 +1,13 @@
 package com.campus.huanjinzi.campusmvp;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
 import com.campus.huanjinzi.campusmvp.InfoTask.InfoPresenter;
-import com.campus.huanjinzi.campusmvp.SwuTask.SwuPresenter;
 import com.campus.huanjinzi.campusmvp.TranscriptTask.TranscriptPresenter;
 import com.campus.huanjinzi.campusmvp.data.CXParams;
 import com.campus.huanjinzi.campusmvp.data.StudentCj;
@@ -14,9 +15,9 @@ import com.campus.huanjinzi.campusmvp.data.StudentInfo.DataBean.GetDataResponseB
 import com.campus.huanjinzi.campusmvp.data.remote.StudentSourceRemote;
 import com.campus.huanjinzi.campusmvp.http.HjzHttp;
 import com.campus.huanjinzi.campusmvp.http.Params;
-import com.campus.huanjinzi.campusmvp.swuwifi.WifiLander;
-import com.campus.huanjinzi.campusmvp.swuwifi.WifiLanderClass;
-import com.campus.huanjinzi.campusmvp.swuwifi.WifiLanderDorm;
+import com.campus.huanjinzi.campusmvp.swuwifi.LoginBean;
+import com.campus.huanjinzi.campusmvp.swuwifi.LogoutBean;
+import com.campus.huanjinzi.campusmvp.swuwifi.Remote.SwuWifiLandTask;
 import com.campus.huanjinzi.campusmvp.utils.FileUtil;
 import com.campus.huanjinzi.campusmvp.utils.Hlog;
 
@@ -30,6 +31,8 @@ import java.util.concurrent.TimeUnit;
  * Created by huanjinzi on 2016/9/4.
  */
 public class TaskManager {
+
+    private static final String TAG = "TaskManager";
     private static TaskManager ourInstance = new TaskManager();
 
     public static TaskManager getInstance() {
@@ -48,48 +51,27 @@ public class TaskManager {
     private Handler mHander;
     public void setHander(Handler mHander) {this.mHander = mHander;}
 
-
-    /**
-     * 登陆之前处理
-     */
-    private void loginTask(WifiLander lander, String username, String password, int mode) {
-        Message message = new Message();
-        Bundle bundle = new Bundle();
-        int result;
-        try {
-            result = lander.login(username, password);
-            bundle.putInt(SwuPresenter.RESULT, result);
-            bundle.putInt(SwuPresenter.MODE, mode);
-            message.setData(bundle);
-            mHander.sendMessage(message);
-        } catch (Exception e) {
-            Hlog.i("SWU","ex="+e.getMessage());
-            bundle.putInt(SwuPresenter.RESULT, -2);
-            bundle.putInt(SwuPresenter.MODE, mode);
-            message.setData(bundle);
-            mHander.sendMessage(message);
-        }
-    }
     /**
      * 账号登陆的方法
      */
-    public void login(final String username, final String password, final int mode) {
+    public void login(final String username, final String password, final String validcode) {
 
         pool.submit(new Runnable() {
             @Override
             public void run() {
-                WifiLander lander;
-                switch (mode) {
-                    //在教室里面登陆
-                    case SwuPresenter.LOGIN_CLASS:
-                        lander = new WifiLanderClass();
-                        loginTask(lander, username, password, mode);
-                        break;
 
-                    case SwuPresenter.LOGIN_DORM:
-                        lander = new WifiLanderDorm();
-                        loginTask(lander, username, password, mode);
-                        break;
+                Message message = new Message();
+                Bundle bundle = new Bundle();
+                LoginBean result;
+                try {
+                    result = SwuWifiLandTask.getInstance().login(username, password,validcode);
+                    bundle.putSerializable(LogConstants.RESULT,result);
+                    bundle.putInt(LogConstants.MODE, LogConstants.LOG_IN);
+                    message.setData(bundle);
+                    mHander.sendMessageDelayed(message,2000);
+                } catch (Exception e) {
+                    Hlog.i(TAG,"login()"+e.getMessage());
+                    mHander.sendEmptyMessage(LogConstants.NETWORK_ERROR);
                 }
             }
         });
@@ -97,25 +79,61 @@ public class TaskManager {
     /**
      * 账号退出方法
      */
-    public void logout(final String username, final String password, final int mode) {
+    public void logout(final String userid) {
 
         pool.submit(new Runnable() {
             @Override
             public void run() {
                 Message message = new Message();
                 Bundle bundle = new Bundle();
+                LogoutBean result;
                 try {
-                    int result = WifiLander.logout(username, password);
-                    bundle.putInt(SwuPresenter.RESULT, result);
-                    bundle.putInt(SwuPresenter.MODE, mode);
+                    result = SwuWifiLandTask.getInstance().logout(userid);
+                    bundle.putSerializable(LogConstants.RESULT,result);
+                    bundle.putInt(LogConstants.MODE, LogConstants.LOG_OUT);
                     message.setData(bundle);
-                    mHander.sendMessage(message);
+                    mHander.sendMessageDelayed(message,2000);
 
                 } catch (Exception e) {
-                    bundle.putInt(SwuPresenter.MODE, mode);
-                    bundle.putInt(SwuPresenter.RESULT, -1);
+                    Hlog.i("TAG",".logout()"+e.getMessage());
+                    mHander.sendEmptyMessage(LogConstants.NETWORK_ERROR);
+                }
+            }
+        });
+    }
+    /**
+     * 账号退出方法
+     */
+    public void logout_all(final String username, final String password) {
+
+        pool.submit(new Runnable() {
+            @Override
+            public void run() {
+                Message message = new Message();
+                Bundle bundle = new Bundle();
+                LoginBean bean = new LoginBean();
+
+                String result;
+                try {
+                    result = SwuWifiLandTask.getInstance().logout_all(username,password);
+                    bean.setResult(result);
+                    if (result.contains("success"))
+                    {
+                        bean.setMessage(LogConstants.LOGIN_SUCCESS_STR);
+                        bundle.putSerializable(LogConstants.RESULT,1);
+                    }
+                    else
+                    {
+                        bean.setMessage(LogConstants.LOGIN_FAIL_STR);
+                        bundle.putSerializable(LogConstants.RESULT,-1);
+                    }
+                    bundle.putInt(LogConstants.MODE, LogConstants.LOG_OUT);
                     message.setData(bundle);
-                    mHander.sendMessage(message);
+                    mHander.sendMessageDelayed(message,2000);
+
+                } catch (Exception e) {
+                    Hlog.i("TAG",".logout()"+e.getMessage());
+                    mHander.sendEmptyMessage(LogConstants.NETWORK_ERROR);
                 }
             }
         });
@@ -179,7 +197,7 @@ public class TaskManager {
                     Message message = new Message();
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("pass",true);
-                    bundle.putInt(SwuPresenter.MODE,SwuPresenter.LOGIN_TEST);
+                    //bundle.putInt(SwuPresenter.MODE,LogConstants.NETWORK_TEST);
                     message.setData(bundle);
                     mHander.sendMessage(message);
                 }
@@ -187,7 +205,7 @@ public class TaskManager {
                     Message message = new Message();
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("pass",false);
-                    bundle.putInt(SwuPresenter.MODE,SwuPresenter.LOGIN_TEST);
+                    //bundle.putInt(SwuPresenter.MODE,SwuPresenter.LOGIN_TEST);
                     message.setData(bundle);
                    mHander.sendMessage(message);
                 }
@@ -204,5 +222,32 @@ public class TaskManager {
         });
     }
 
+    public void getBitmap(final String url)
+    {
+        pool.submit(new Runnable() {
+            @Override
+            public void run() {
+                Params params = Params.getInstance();
+                params.setUrl(url);
+                params.setForm("");
+                InputStream in = null;
+                try
+                {
+                    in = HjzHttp.getInstance().get(params);
+                    Bitmap bitmap = BitmapFactory.decodeStream(in);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable(LogConstants.RESULT,bitmap);
+                    bundle.putInt(LogConstants.MODE,LogConstants.VALIDCODE);
+                    Message message = new Message();
+                    message.setData(bundle);
+                    mHander.sendMessage(message);
+                }
+                catch (Exception e)
+                {
+                    mHander.sendEmptyMessageDelayed(LogConstants.NETWORK_ERROR,1000);
+                }
+            }
+        });
+    }
     public void shutDownPool(){ pool.shutdown();}
 }

@@ -100,7 +100,7 @@ public class InfoActivity extends AppCompatActivity {
                             v.setBackgroundColor(Color.WHITE);
                             break;
                         case  MotionEvent.ACTION_UP:
-                            Snackbar.make(v,"test"+position,Snackbar.LENGTH_LONG).show();
+                            //Snackbar.make(v,"test"+position,Snackbar.LENGTH_LONG).show();
                             v.setBackgroundColor(Color.WHITE);
                             break;
                     }

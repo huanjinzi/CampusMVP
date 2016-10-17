@@ -30,24 +30,16 @@ public class SwuActivity extends AppCompatActivity {
 
     //private Toolbar toolbar;
     private SwuPresenter presenter;
-    private Intent intent;
-    //private BroadcastReceiver receiver;
 
-    public ProgressView getProgress() {return progress;}
 
     private ProgressView progress;
-    private ActivityManager am;
-
-    private boolean TASK_DONE = true;
-    public boolean isTaskDone() {return TASK_DONE;}
-    public void setTaskDone(boolean TASK_DONE) {this.TASK_DONE = TASK_DONE;}
-
     private RelativeLayout tab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.swu_activity);
-        Hlog.i("SWU", this.toString()+getTaskId());
+        //Hlog.i("SWU", this.toString()+getTaskId());
 
         //toolbar = (Toolbar) findViewById(R.id.toolbar);
         //toolbar.setTitle("campus");
@@ -73,10 +65,10 @@ public class SwuActivity extends AppCompatActivity {
         progress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isTaskDone())
+                if(!SwuFlags.WATER)
                 {
-                    setTaskDone(false);
-                    progress.setDrawsin(true);
+                    SwuFlags.WATER = true;
+                    refreshState();
                     presenter.logTask();
                 }
             }
@@ -119,8 +111,28 @@ public class SwuActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        //am.moveTaskToFront(am.getAppTasks().get(1).getTaskInfo().id,0);
+        Hlog.i("SWU","onRestart()");
+        /**设置登陆状态*/
+        refreshState();
 
+    }
+    public void refreshState()
+    {
+        if(SwuFlags.GREEN)
+        {
+            tab.setBackgroundColor(getResources().getColor(R.color.GREEN));
+        }else
+        {
+            tab.setBackgroundColor(getResources().getColor(R.color.GREY_900));
+        }
+        if(SwuFlags.WATER)
+        {
+            progress.setDrawsin(true);
+        }
+        else
+        {
+            progress.setDrawsin(false);
+        }
     }
 
     @Override
@@ -147,25 +159,6 @@ public class SwuActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Bundle b = intent.getExtras();
-        if(b != null) {
-            Hlog.i("SWU","b.getbool="+b.getBoolean(GREEN));
-            if (b.getBoolean(GREEN) || Flags.getInstance().isHAS_LOGED()) {
-                tab.setBackgroundColor(getResources().getColor(R.color.GREEN));
-            } else {
-                Flags.getInstance().setHAS_LOGED(false);
-                tab.setBackgroundColor(getResources().getColor(R.color.GREY_900));
-            }
-
-            if (b.getBoolean(WATER)) {
-                setTaskDone(false);
-                getProgress().setDrawsin(true);
-            } else {
-                setTaskDone(true);
-                getProgress().setDrawsin(false);
-            }
-        }
-        Hlog.i("SWU","onNewIntent()");
     }
 
     @Override

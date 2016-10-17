@@ -69,6 +69,16 @@ public final class Constants {
         return "loginTime=" + date.getTime() + "&username=" + username + "&password=" + password;
     }
 
+    public static final String getLoginPostForm(String username, String password,String validcode) {
+
+        return "userId="+username+"&password="+password+"&service=%25E9%25BB%2598%25E8%25AE%25A4&queryString=wlanuserip%253D27d5e2cac58389a92b07baca5aa617ee%2526wlanacname%253Dc3d7ed6d307ae29d%2526ssid%253D46be4f158ac727af%2526nasip%253Df9dbb3fe11a1f4e3b5cce4a65fc79cf9%2526mac%253D9bca081b48d1f514ce2f43e9408158aa%2526t%253Dwireless-v2%2526url%253D720c545b4e107cdd144930fa89edaf88f2ce18d55abc293a&operatorPwd=&operatorUserId=&validcode="+validcode;
+    }
+
+    public static final String getLoginGetUrl(String userIndex, int keepaliveInterval) {
+
+        return "http://l.swu.edu.cn/eportal/success.jsp?userIndex="+userIndex+"&keepaliveInterval="+keepaliveInterval;}
+
+
     /*在教室(Class)登录校园网wifi url*/
     public static final String LOGIN_CLASS_URL = "http://202.202.96.57:9010/login/login1.jsp";
 
@@ -100,6 +110,7 @@ public final class Constants {
 
     /*寝室登录成功返回的字段*/
     public static final String DORM_SUCCESS = "登录成功";
+    public static final String SUCCESS = "登录成功";
     public static final String NOT_LOGIN = "现在没有登录";
     public static final String LOG_OUT_SUCCESS = "成功退出";
     public static final String HAS_LOGED_DORRM = "You are already logged in";
