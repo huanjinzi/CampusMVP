@@ -1,6 +1,7 @@
 package com.campus.huanjinzi.campusmvp.AboutTask;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -40,7 +41,7 @@ public class AboutActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         toolbar.setTitleTextAppearance(this, R.style.TitleText);
-        toolbar.setTitle(getIntent().getExtras().getString("title"));
+        toolbar.setTitle(getIntent().getExtras().getString(getString(R.string.TITLE)));
         setSupportActionBar(toolbar);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -122,6 +123,12 @@ public class AboutActivity extends AppCompatActivity {
 
                     builder.setMessage(context.getString(R.string.about));
                     builder.setTitle("软件协议");
+                    builder.setNegativeButton("确认", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
                     builder.create().show();
                     break;
                 case 1:

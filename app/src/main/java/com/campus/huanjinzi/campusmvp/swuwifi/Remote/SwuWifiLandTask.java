@@ -22,9 +22,10 @@ public class SwuWifiLandTask {
     private SwuWifiLandTask(){}
     public static SwuWifiLandTask getInstance(){return task;}
 
+    //http://login2.swu.edu.cn/eportal/InterFace.do?method=login
     public LoginBean login(String username, String password,String validcode)throws Exception
     {
-        params.setUrl("http://l.swu.edu.cn/eportal/InterFace.do?method=login");
+        params.setUrl("http://login2.swu.edu.cn/eportal/InterFace.do?method=login");
         params.setForm(Constants.getLoginPostForm(username, password,validcode));
         InputStream in = HjzHttp.getInstance().post(params);
         StringBuilder sb = HjzStreamReader.getString(in);
@@ -66,8 +67,10 @@ public class SwuWifiLandTask {
             {
                 return "success";
             }
+            else
+            {return "fail";}
         }
-        return "fail";
+        return "success";
     }
 
     private String getIP(String str){

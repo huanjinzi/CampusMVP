@@ -17,29 +17,6 @@ public final class Constants {
     /*私有化构造方法，避免被创建实例，只存在Constants.class实例*/
     private Constants() {
     }
-
-    /*校内门户登录认证url*/
-    public static final String XNMH_VALIDATE_URL = "http://urp.swu.edu.cn/userPasswordValidate.portal";
-
-    /*校内门户登录的表单*/
-    public static final String getBaseInfoForm(CXParams params) {
-        return "Login.Token1=" + params.getUsename() + "&Login.Token2=" + params.getPassword() + "&" +
-                "goto=http://urp.swu.edu.cn/loginSuccess.portal&" +
-                "gotoOnFail=http://urp.swu.edu.cn/loginFailure.portal";
-    }
-
-    /*校内门户首页的url*/
-    public static final String XNMH_INDEX_URL = "http://urp.swu.edu.cn/index.portal";
-
-    /*学生基本信息url*/
-    public static final String BASE_INFO_URL = "http://urp.swu.edu.cn/index.portal?.pn=p85";
-
-    /*教务系统首页url*/
-    public static final String JWXT_INDEX_URL = "http://jw.swu.edu.cn/jwglxt/idstar/index.jsp";
-
-    /*教务系统登录认证url*/
-    public static final String JWXT_VALIDATE_URL = "http://jw.swu.edu.cn/jwglxt/xtgl/login_Ddlogin.html";
-
     /*成绩查询url*/
     public static final String getCjcxUrl(CXParams params) {
         return "http://jw.swu.edu.cn/jwglxt/cjcx/cjcx_cxDgXscj.html?doType=query&gnmkdmKey=N305005&" +
@@ -72,23 +49,7 @@ public final class Constants {
     public static final String getLoginPostForm(String username, String password,String validcode) {
 
         return "userId="+username+"&password="+password+"&service=%25E9%25BB%2598%25E8%25AE%25A4&queryString=wlanuserip%253D27d5e2cac58389a92b07baca5aa617ee%2526wlanacname%253Dc3d7ed6d307ae29d%2526ssid%253D46be4f158ac727af%2526nasip%253Df9dbb3fe11a1f4e3b5cce4a65fc79cf9%2526mac%253D9bca081b48d1f514ce2f43e9408158aa%2526t%253Dwireless-v2%2526url%253D720c545b4e107cdd144930fa89edaf88f2ce18d55abc293a&operatorPwd=&operatorUserId=&validcode="+validcode;
-    }
-
-    public static final String getLoginGetUrl(String userIndex, int keepaliveInterval) {
-
-        return "http://l.swu.edu.cn/eportal/success.jsp?userIndex="+userIndex+"&keepaliveInterval="+keepaliveInterval;}
-
-
-    /*在教室(Class)登录校园网wifi url*/
-    public static final String LOGIN_CLASS_URL = "http://202.202.96.57:9010/login/login1.jsp";
-
-    public static final String getLoginClassUrl(String username) {
-        return "http://202.202.96.59:9080/index.jsp?username=" + username;
-    }
-
-    /*在教室(Class)登录校园网wifi表单*/
-    public static final String getLoginClassForm(String username, String password) {
-        return "username=" + username + "&password=" + password + "&if_login=Y&B2=%B5%C7%C2%BC%28Login%29";
+    //          userId="+username+"&password="+password+"&service=%25E9%25BB%2598%25E8%25AE%25A4&queryString=wlanuserip%253D27d5e2cac58389a92b07baca5aa617ee%2526wlanacname%253Dc3d7ed6d307ae29d%2526ssid%253D46be4f158ac727af%2526nasip%253Df9dbb3fe11a1f4e3b5cce4a65fc79cf9%2526mac%253D9bca081b48d1f514ce2f43e9408158aa%2526t%253Dwireless-v2%2526url%253D720c545b4e107cdd144930fa89edaf88f2ce18d55abc293a&operatorPwd=&operatorUserId=&validcode="+validcode;
     }
 
     /*获取基本信息的 url*/
@@ -105,18 +66,5 @@ public final class Constants {
     /*获取基本信息的表单*/
     public static final String getInfoForm(CXParams params) {
         return "serviceInfo=%7B%22serviceAddress%22%3A%22dataCenter2.0%2Fsoap%2Fds%2FdataService%22%2C%22serviceType%22%3A%22soap%22%2C%22serviceSource%22%3A%22ds%22%2C%22paramDataFormat%22%3A%22xml%22%2C%22httpMethod%22%3A%22POST%22%2C%22soapInterface%22%3A%22getData%22%2C%22params%22%3A%7B%22arg0%22%3A%7B%22Body%22%3A%7B%22tablename%22%3A%22dataout.v_xs_info%22%2C%22condition%22%3A%7B%22selects%22%3A%5B%7B%22select%22%3A%5B%7B%22column%22%3A%22id%22%2C%22opt%22%3A%22EQ%22%2C%22value%22%3A%22"+params.getStudent_id()+"%22%7D%5D%7D%5D%7D%7D%7D%7D%2C%22cDataPath%22%3A%5B%22arg0%22%5D%2C%22namespace%22%3A%22%22%2C%22xml_json%22%3A%22%22%7D";}
-    /**campus程序字段*/
-
-
-    /*寝室登录成功返回的字段*/
-    public static final String DORM_SUCCESS = "登录成功";
-    public static final String SUCCESS = "登录成功";
-    public static final String NOT_LOGIN = "现在没有登录";
-    public static final String LOG_OUT_SUCCESS = "成功退出";
-    public static final String HAS_LOGED_DORRM = "You are already logged in";
-    public static final String HAS_LOGED_CLASS = "账号已在其他计算机上登录";
-    public static final String USER_NAME = "用户名";
-    public static final String IP = "IP地址";
-
 
 }

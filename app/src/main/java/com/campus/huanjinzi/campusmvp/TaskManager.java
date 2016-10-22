@@ -68,7 +68,7 @@ public class TaskManager {
                     bundle.putSerializable(LogConstants.RESULT,result);
                     bundle.putInt(LogConstants.MODE, LogConstants.LOG_IN);
                     message.setData(bundle);
-                    mHander.sendMessageDelayed(message,1000);
+                    mHander.sendMessage(message);
                 } catch (Exception e) {
                     Hlog.i(TAG,"login()"+e.getMessage());
                     mHander.sendEmptyMessage(LogConstants.NETWORK_ERROR);

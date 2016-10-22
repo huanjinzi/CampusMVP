@@ -33,6 +33,10 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import static com.campus.huanjinzi.campusmvp.LogConstants.EX_COUNT;
+import static com.campus.huanjinzi.campusmvp.LogConstants.PASSWORD;
+import static com.campus.huanjinzi.campusmvp.LogConstants.USERNAME;
+
 /**
  * Created by huanjinzi on 2016/8/27.
  */
@@ -78,14 +82,14 @@ public class TranscriptPresenter {
     public void doTask() {
 
 
-        if(sp.getBoolean(SwuPresenter.EX_COUNT,false))
+        if(sp.getBoolean(EX_COUNT,false))
         {
             SharedPreferences.Editor editor = sp.edit();
-            editor.putBoolean(SwuPresenter.EX_COUNT,false);
+            editor.putBoolean(EX_COUNT,false);
             editor.commit();
 
-            String username = sp.getString(SwuPresenter.USERNAME, "");
-            String password = sp.getString(SwuPresenter.PASSWORD, "");
+            String username = sp.getString(USERNAME, "");
+            String password = sp.getString(PASSWORD, "");
             TaskManager task = TaskManager.getInstance();
             task.setHander(mHandler);
             task.getStudentCj(context,username, password);
@@ -97,8 +101,8 @@ public class TranscriptPresenter {
                 cj = (StudentCj) fileUtil.get(context,"cj");
             }
             else {
-                String username = sp.getString(SwuPresenter.USERNAME, "");
-                String password = sp.getString(SwuPresenter.PASSWORD, "");
+                String username = sp.getString(USERNAME, "");
+                String password = sp.getString(PASSWORD, "");
                 TaskManager task = TaskManager.getInstance();
                 task.setHander(mHandler);
                 task.getStudentCj(context,username, password);

@@ -14,6 +14,17 @@
     <string name="BUTTON">button</string>
     <string name="TITLE">title</string>
     <string name="MODE">mode</string>
+    <string name="SUCCESS">success</string>
+    <string name="FAIL">fail</string>
+    <string name="HTTP_SWU">http://login2.swu.edu.cn</string>
+    <string name="REFRESH_VALIDCODE">刷新验证码</string>
+    <string name="HAS_LOGED_OTHER_PLACE">\n你的账号已在其他地方登录,需要现在退出吗?</string>
+    <string name="OUTING">退出中...</string>
+    <string name="VALIDCODE_ERROR">验证码错误</string>
+    <string name="CANCEL">取消</string>
+    <string name="OK">确认</string>
+
+    <!--aboutactivity-->
 
     <string name="EXCHANGE">切换</string>
     <string name="LOGIN">登陆</string>

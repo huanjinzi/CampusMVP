@@ -1,13 +1,10 @@
 package com.campus.huanjinzi.campusmvp;
 
 import com.campus.huanjinzi.campusmvp.swuwifi.Remote.SwuWifiLandTask;
-import com.campus.huanjinzi.campusmvp.swuwifi.Remote.WifiLanderTask;
-import com.campus.huanjinzi.campusmvp.utils.Hlog;
 
 import org.junit.Test;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 
 /**
  * Created by huanjinzi on 2016/8/16.

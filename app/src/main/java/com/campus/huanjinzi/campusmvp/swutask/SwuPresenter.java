@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -30,16 +31,16 @@ import com.campus.huanjinzi.campusmvp.swuwifi.LoginBean;
 import com.campus.huanjinzi.campusmvp.swuwifi.LogoutBean;
 import com.campus.huanjinzi.campusmvp.utils.Hlog;
 
+import static com.campus.huanjinzi.campusmvp.LogConstants.HAS_COUNT;
+import static com.campus.huanjinzi.campusmvp.LogConstants.PASSWORD;
+import static com.campus.huanjinzi.campusmvp.LogConstants.USERNAME;
+
 /**
  * Created by huanjinzi on 2016/8/25.
  */
 public class SwuPresenter {
 
     public static final String TAG = "SwuPresenter";
-    public static final String HAS_COUNT = "has_count";
-    public static final String EX_COUNT = "ex_count";
-    public static final String USERNAME = "username";
-    public static final String PASSWORD = "password";
 
     public static final String SWU_WIFI = "swu-wifi";
     public static final String SWU_WIFI_DORM = "swu-wifi-dorm";
@@ -49,8 +50,13 @@ public class SwuPresenter {
 
     private SharedPreferences spref;
     private ProgressDialog progressDialog;
-    private AlertDialog.Builder builder;
-    private AlertDialog dialog_validcode;
+
+    private AlertDialog dialog_valid;
+    private AlertDialog dialog_haslog;
+
+    private EditText editText;
+    private ImageView imageView;
+
     private TaskManager taskManager;
     private Handler mHandler;
     private LoginBean login_bean;
@@ -129,7 +135,7 @@ public class SwuPresenter {
                 break;
 
             case 2:
-                if (activity.getSharedPreferences(MyApp.SPREF, 0).getBoolean(SwuPresenter.HAS_COUNT, false)) {
+                if (activity.getSharedPreferences(MyApp.SPREF, 0).getBoolean(HAS_COUNT, false)) {
                     intent = new Intent(activity, TranscriptActivity.class);
                     activity.startActivity(intent);
                 } else {
@@ -142,7 +148,16 @@ public class SwuPresenter {
                 }
                 break;
             case 3:
-                startActivity(activity, InfoActivity.class, "个人信息", null, 0);
+                if (activity.getSharedPreferences(MyApp.SPREF, 0).getBoolean(HAS_COUNT, false)) {
+                    startActivity(activity, InfoActivity.class, "个人信息", null, 0);
+                } else {
+                    Snackbar.make(view, "请登录账号后查询个人信息", Snackbar.LENGTH_LONG).setActionTextColor(activity.getResources().getColor(R.color.GREEN)).setAction("现在登录", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            LogActivityLauch();
+                        }
+                    }).show();
+                }
                 break;
             case 4:
                 startActivity(activity, AboutActivity.class, "关于软件", null, 0);
@@ -152,9 +167,10 @@ public class SwuPresenter {
     }
 
     public void logTask() {
-
+//
         if (isSwuWifi(activity) == -1) {
             SwuFlags.WATER = false;
+            activity.refreshState();
             showWifiSettings();
         } else {
             taskManager.setHander(mHandler);
@@ -163,12 +179,13 @@ public class SwuPresenter {
                 username = spref.getString(USERNAME, "");
                 password = spref.getString(PASSWORD, "");
 
-                if (SwuFlags.HAS_LOGED) {
+                if (SwuFlags.GREEN) {
                     taskManager.logout_all(username,password);
                 } else {
                     /**验证码处理*/
+                //http://login2.swu.edu.cn/eportal/validcode?rnd=?0.5358998088146822
                     if (login_bean != null && login_bean.getValidCodeUrl().length() > 3) {
-                        bean.setValidCodeUrl("http://l.swu.edu.cn" + login_bean.getValidCodeUrl());
+                        bean.setValidCodeUrl(activity.getString(R.string.HTTP_SWU) + login_bean.getValidCodeUrl());
                         taskManager.getBitmap(bean.getValidCodeUrl());
                     } else {
                         taskManager.login(username, password, "");
@@ -215,36 +232,19 @@ public class SwuPresenter {
         SwuFlags.WATER = false;
         activity.refreshState();
         if (result.getMessage().contains(LogConstants.HASLOGED_OTHER_PLACE) || result.getMessage().contains(LogConstants.USERS_LIMITED)) {
-            showDialog(new OnCreateDialogListener() {
-                @Override
-                public String getContent() {
-                    return "\n你的账号已在其他地方登录,需要现在退出吗?";
-                }
-
-                @Override
-                public void onCancel() {
-                    Hlog.i(TAG, "onCancel");
-                }
-
-                @Override
-                public void onOk() {
-                    progressDialog = new ProgressDialog(activity);
-                    progressDialog.setMessage("退出中...");
-                    progressDialog.setCancelable(true);
-                    progressDialog.setCanceledOnTouchOutside(false);
-                    progressDialog.show();
-                    taskManager.logout_all(username, password);
-                }
-
-                @Override
-                public void add(AlertDialog.Builder builder) {
-
-                }
-            });
-        } else if (result.getMessage().contains("验证码错误")) {
+            showHas(activity);
+        } else if (result.getMessage().contains(activity.getString(R.string.VALIDCODE_ERROR))) {
+            editText.setText("");
+            editText.setHintTextColor(activity.getResources().getColor(R.color.RED));
+            editText.setHint("验证码错误");
             taskManager.getBitmap(bean.getValidCodeUrl());
         } else {
-
+            if(editText != null)
+            {
+                editText.setText("");
+                editText.setHintTextColor(Color.GRAY);
+                editText.setHint("输入验证码");
+            }
             Hlog.i(TAG, result.getMessage());
             snackbar(result.getMessage());
         }
@@ -274,66 +274,7 @@ public class SwuPresenter {
     /**验证码处理*/
     private void validcodeResult(final Bitmap bitmap)
     {
-        if(!dialog_validcode.isShowing()){
-        showDialog(new OnCreateDialogListener() {
-            EditText editText = null;
-            ImageView imageView = null;
-            @Override
-            public String getContent() {return "";}
-            @Override
-            public void onCancel() {
-                SwuFlags.WATER  =false;
-                activity.refreshState();
-            }
-            @Override
-            public void onOk() {
-                SwuFlags.WATER = true;
-                activity.refreshState();
-                taskManager.login(username,password,editText.getText().toString().trim());}
-
-            @Override
-            public void add(AlertDialog.Builder builder) {
-                View view = activity.getLayoutInflater().inflate(R.layout.validvode_dialog,null,false);
-                editText = (EditText) view.findViewById(R.id.validvode_edittext);
-                imageView = (ImageView) view.findViewById(R.id.validvode_bitmap);
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        taskManager.getBitmap(bean.getValidCodeUrl());
-                    }
-                });
-                imageView.setImageBitmap(bitmap);
-                builder.setView(view);
-            }
-        });
-        }
-        else
-        {
-            ImageView image = (ImageView) dialog_validcode.findViewById(R.id.validvode_bitmap);
-            image.setImageBitmap(bitmap);
-        }
-    }
-
-    private void showDialog(final OnCreateDialogListener listener) {
-        builder = new AlertDialog.Builder(activity);
-        listener.add(builder);
-        builder.setMessage(listener.getContent());
-        builder.setCancelable(false);
-        builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-                listener.onCancel();
-            }
-        });
-        builder.setNegativeButton("确认", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                listener.onOk();
-            }
-        });
-        dialog_validcode = builder.create();
-        dialog_validcode.show();
+       showValidDialog(activity,bitmap);
     }
 
     private void snackbar(String content) {
@@ -345,12 +286,15 @@ public class SwuPresenter {
      */
     public static int isSwuWifi(Context activity) {
         WifiManager wifi = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo info = wifi.getConnectionInfo();
-        if (info.getSSID().trim().contains(SWU_WIFI_DORM) || info.getSSID().trim().contains(SWU_WIFI)) {
-            return 1;
-        } else {
-            return -1;
+        boolean is = wifi.isWifiEnabled();
+        if(wifi.isWifiEnabled())
+        {
+            WifiInfo info = wifi.getConnectionInfo();
+            if (info.getSSID().trim().contains(SWU_WIFI_DORM) || info.getSSID().trim().contains(SWU_WIFI)) {
+                return 1;
+            }
         }
+        return -1;
     }
 
     /**
@@ -389,8 +333,93 @@ public class SwuPresenter {
                 startActivity(activity, LogActivity.class, activity.getString(R.string.COUNT_LOGIN), activity.getString(R.string.LOGIN), LogConstants.LOG_IN);
                 break;
             case -1:
+                SwuFlags.WATER = false;
+                activity.refreshState();
                 showWifiSettings();
                 break;
+        }
+    }
+
+    private void showValidDialog(Context context,Bitmap bitmap) {
+
+        AlertDialog.Builder builder = null;
+
+        if(dialog_valid == null) {
+            if (builder == null) {builder = new AlertDialog.Builder(context);}
+            builder.setMessage("验证码");
+            builder.setCancelable(false);
+            View view = activity.getLayoutInflater().inflate(R.layout.validvode_dialog, null, false);
+            editText = (EditText) view.findViewById(R.id.validvode_edittext);
+            imageView = (ImageView) view.findViewById(R.id.validvode_bitmap);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    snackbar(activity.getString(R.string.REFRESH_VALIDCODE));
+                    taskManager.getBitmap(bean.getValidCodeUrl());
+                }});
+            imageView.setImageBitmap(bitmap);
+
+            builder.setView(view);
+
+            builder.setPositiveButton(activity.getString(R.string.CANCEL), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    activity.sendBroadcast(new Intent(LogActivity.TASK_DONE));
+                    dialog.cancel();
+                }
+            });
+            builder.setNegativeButton(activity.getString(R.string.OK), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    activity.sendBroadcast(new Intent(LogActivity.TASK_START));
+                    taskManager.login(username,password,editText.getText().toString().trim());
+                }});
+            dialog_valid = builder.create();
+            dialog_valid.show();
+        }
+        else
+        {
+            imageView.setImageBitmap(bitmap);
+            dialog_valid.show();
+        }
+    }
+
+    public void showHas(Context context) {
+        /**dialog_haslog = null 就创建*/
+        if (dialog_haslog == null) {
+
+            AlertDialog.Builder builder = null;
+            if (builder == null) {
+                builder = new AlertDialog.Builder(context);
+            }
+            builder.setMessage(context.getString(R.string.HAS_LOGED_OTHER_PLACE));
+            builder.setCancelable(false);
+            builder.setPositiveButton(activity.getString(R.string.CANCEL), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.setNegativeButton(activity.getString(R.string.OK), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    progressDialog = new ProgressDialog(activity);
+                    progressDialog.setMessage(activity.getString(R.string.OUTING));
+                    progressDialog.setCancelable(true);
+                    progressDialog.setCanceledOnTouchOutside(false);
+                    progressDialog.show();
+                    taskManager.logout_all(username, password);
+                }
+            });
+            dialog_haslog = builder.create();
+            dialog_haslog.show();
+        }
+        else
+        {
+
+            dialog_haslog.show();
         }
     }
 }
