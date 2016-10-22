@@ -24,17 +24,20 @@
   ```
   如果多次登录失败，会要求验证码，此时直接输入验证码即可登录，点击验证码图片即可刷新验证码
   ```
+  
 ![3](https://github.com/huanjinzi/CampusMVP/blob/develop/picture/3.png)
 
 # 2.个人信息查询
 
 > **查看自己的个人信息**
+
 ![6](https://github.com/huanjinzi/CampusMVP/blob/develop/picture/6.png)
 
 
 # 3.成绩查询
 
 > **成绩分学年展示**
+
 ![5](https://github.com/huanjinzi/CampusMVP/blob/develop/picture/5.png)
 
 **有什么问题或建议，欢迎提出！**
