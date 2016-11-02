@@ -2,6 +2,7 @@ package com.campus.huanjinzi.campusmvp.data.local;
 
 import com.campus.huanjinzi.campusmvp.data.CXParams;
 
+import java.net.URLEncoder;
 import java.util.Date;
 
 /**
@@ -29,28 +30,10 @@ public final class Constants {
         return "xnm=" + params.getYear() + "&xqm=" + params.getTerm() + "&_search=false&nd=" + date.getTime() + "&queryModel.showCount=100&queryModel.currentPage=1&queryModel.sortName=&queryModel.sortOrder=asc&time=" + time;
     }
 
-    /*退出校园网url*/
-    public static final String LOGOUT_URL = "http://service.swu.edu.cn/fee/remote_logout2.jsp";
+    public static final String getLoginPostForm(String username, String password,String qurey,String validcode) {
 
-    /*退出校园网表单*/
-    public static final String getLogoutForm(String username, String password) {
-        return "username=" + username + "&password=" + password + "&B1=确认";
-    }
-
-    /*在寝室(Dorm)登录校园网wifi url*/
-    public static final String LOGIN_DORM_URL = "http://222.198.120.8:8080/loginPhoneServlet";
-
-    /*在寝室(Dorm)登录校园网wifi表单*/
-    public static final String getLoginDormForm(String username, String password) {
-        Date date = new Date();
-        return "loginTime=" + date.getTime() + "&username=" + username + "&password=" + password;
-    }
-
-    public static final String getLoginPostForm(String username, String password,String validcode) {
-
-        return "userId="+username+"&password="+password+"&service=%25E9%25BB%2598%25E8%25AE%25A4&queryString=wlanuserip%253D27d5e2cac58389a92b07baca5aa617ee%2526wlanacname%253Dc3d7ed6d307ae29d%2526ssid%253D46be4f158ac727af%2526nasip%253Df9dbb3fe11a1f4e3b5cce4a65fc79cf9%2526mac%253D9bca081b48d1f514ce2f43e9408158aa%2526t%253Dwireless-v2%2526url%253D720c545b4e107cdd144930fa89edaf88f2ce18d55abc293a&operatorPwd=&operatorUserId=&validcode="+validcode;
-    //          userId="+username+"&password="+password+"&service=%25E9%25BB%2598%25E8%25AE%25A4&queryString=wlanuserip%253D27d5e2cac58389a92b07baca5aa617ee%2526wlanacname%253Dc3d7ed6d307ae29d%2526ssid%253D46be4f158ac727af%2526nasip%253Df9dbb3fe11a1f4e3b5cce4a65fc79cf9%2526mac%253D9bca081b48d1f514ce2f43e9408158aa%2526t%253Dwireless-v2%2526url%253D720c545b4e107cdd144930fa89edaf88f2ce18d55abc293a&operatorPwd=&operatorUserId=&validcode="+validcode;
-    }
+        return "userId="+username+"&password="+password+"&service=%25E9%25BB%2598%25E8%25AE%25A4&queryString="+qurey+"&operatorPwd=&operatorUserId=&validcode="+validcode;
+       }
 
     /*获取基本信息的 url*/
     public static final String YZSFWMH_URL = "http://i.swu.edu.cn/remote/service/process";
@@ -67,4 +50,20 @@ public final class Constants {
     public static final String getInfoForm(CXParams params) {
         return "serviceInfo=%7B%22serviceAddress%22%3A%22dataCenter2.0%2Fsoap%2Fds%2FdataService%22%2C%22serviceType%22%3A%22soap%22%2C%22serviceSource%22%3A%22ds%22%2C%22paramDataFormat%22%3A%22xml%22%2C%22httpMethod%22%3A%22POST%22%2C%22soapInterface%22%3A%22getData%22%2C%22params%22%3A%7B%22arg0%22%3A%7B%22Body%22%3A%7B%22tablename%22%3A%22dataout.v_xs_info%22%2C%22condition%22%3A%7B%22selects%22%3A%5B%7B%22select%22%3A%5B%7B%22column%22%3A%22id%22%2C%22opt%22%3A%22EQ%22%2C%22value%22%3A%22"+params.getStudent_id()+"%22%7D%5D%7D%5D%7D%7D%7D%7D%2C%22cDataPath%22%3A%5B%22arg0%22%5D%2C%22namespace%22%3A%22%22%2C%22xml_json%22%3A%22%22%7D";}
 
+    //http://123.123.123.123/
+
+    /**
+     * wlanuserip=08fa6f34b8c1ff5167d49f81e1fd33f8&
+     * wlanacname=d3fd3003b8a92e5a0d9c924efc713c22&
+     * ssid=&nasip=f2267a27304a35841a4b2f3bbdcef5e6&
+     * snmpagentip=&
+     * mac=4eb7fa99296c754712572b50958dd06f&
+     * t=wireless-v2&
+     * url=bc769469379bc92a49dd39c8187326462c2c594662118267&
+     * apmac=&nasid=d3fd3003b8a92e5a0d9c924efc713c22&
+     * vid=32aa658604812e1e&
+     * port=19c8374bfd728a1d&nasportid=136985ff42ef1c4528a45c84a073ddb8aa9980cdf1da3441f7252cef2a5bff26ec02d06196ee4028*/
+
+    /*
+    * userId=huanjinzi&password=197325&service=%25E9%25BB%2598%25E8%25AE%25A4&queryString=wlanuserip%253D08fa6f34b8c1ff5167d49f81e1fd33f8%2526wlanacname%253Dd3fd3003b8a92e5a0d9c924efc713c22%2526ssid%253D%2526nasip%253Df2267a27304a35841a4b2f3bbdcef5e6%2526snmpagentip%253D%2526mac%253D4eb7fa99296c754712572b50958dd06f%2526t%253Dwireless-v2%2526url%253D720c545b4e107cdd144930fa89edaf88f2ce18d55abc293a%2526apmac%253D%2526nasid%253Dd3fd3003b8a92e5a0d9c924efc713c22%2526vid%253D32aa658604812e1e%2526port%253D19c8374bfd728a1d%2526nasportid%253D136985ff42ef1c4528a45c84a073ddb8aa9980cdf1da3441f7252cef2a5bff26ec02d06196ee4028&operatorPwd=&operatorUserId=&validcode=*/
 }
