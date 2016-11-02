@@ -15,3 +15,16 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keep public class com.campus.huanjinzi.campusmvp.swuwifi.LoginBean
+-keep public class com.campus.huanjinzi.campusmvp.swuwifi.LogoutBean
+-keep public class com.campus.huanjinzi.campusmvp.swuwifi.SwuServiceBean
+
+-keep public class com.campus.huanjinzi.campusmvp.data.StudentInfo
+-keep public class com.campus.huanjinzi.campusmvp.data.StudentCj
+-keep public class com.campus.huanjinzi.campusmvp.data.ResponseBean
+-keep public class com.campus.huanjinzi.campusmvp.swuwifi.SwuServiceBean
+-keep public class com.campus.huanjinzi.campusmvp.TaskManager
+
+
+

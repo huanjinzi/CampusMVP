@@ -3,29 +3,24 @@ package com.campus.huanjinzi.campusmvp.LogTask;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.renderscript.ScriptGroup;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
+import com.campus.huanjinzi.campusmvp.LogConstants;
 import com.campus.huanjinzi.campusmvp.MyApp;
 import com.campus.huanjinzi.campusmvp.R;
-import com.campus.huanjinzi.campusmvp.SwuTask.SwuActivity;
 import com.campus.huanjinzi.campusmvp.SwuTask.SwuPresenter;
-import com.campus.huanjinzi.campusmvp.utils.Hlog;
-import com.campus.huanjinzi.campusmvp.view.customview.ProgressView;
+
+import static com.campus.huanjinzi.campusmvp.LogConstants.PASSWORD;
+import static com.campus.huanjinzi.campusmvp.LogConstants.USERNAME;
 
 
 public class LogActivity extends AppCompatActivity {
@@ -82,9 +77,9 @@ public class LogActivity extends AppCompatActivity {
         progress = (LinearLayout) findViewById(R.id.progessbar);
         login_form = (ScrollView) findViewById(R.id.login_form);
 
-        if (sp.getBoolean(SwuPresenter.HAS_COUNT, false)) {
-            username.setText(sp.getString(SwuPresenter.USERNAME, ""));
-            password.setText(sp.getString(SwuPresenter.PASSWORD, ""));
+        if (sp.getBoolean(LogConstants.HAS_COUNT, false)) {
+            username.setText(sp.getString(USERNAME, ""));
+            password.setText(sp.getString(PASSWORD, ""));
         }
 
         mbutton = (Button) findViewById(R.id.email_sign_in_button);

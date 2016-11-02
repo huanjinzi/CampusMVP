@@ -1,10 +1,12 @@
 package com.campus.huanjinzi.campusmvp.AboutTask;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,7 +41,7 @@ public class AboutActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         toolbar.setTitleTextAppearance(this, R.style.TitleText);
-        toolbar.setTitle(getIntent().getExtras().getString("title"));
+        toolbar.setTitle(getIntent().getExtras().getString(getString(R.string.TITLE)));
         setSupportActionBar(toolbar);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -79,7 +81,7 @@ public class AboutActivity extends AppCompatActivity {
         RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params3.addRule(RelativeLayout.BELOW,recycler.getId());
         TextView textView = new TextView(this);
-        textView.setTextSize(12);
+        textView.setTextSize(13);
         textView.setText("design by huanjinzi");
         //textView.setTextColor(getResources().getColor(R.color.GREEN));
         textView.setId(generateViewId());
@@ -103,8 +105,8 @@ public class AboutActivity extends AppCompatActivity {
 
     class RecyclerAdapter extends RecyclerView.Adapter<Holder> {
         private Context context;
-        private String[] title = {"使用说明","软件协议","项目地址","作者博客"};
-        private String[] content = {"","","Github","CSDN"};
+        private String[] title = {"软件协议","作者博客","项目地址"};
+        private String[] content = {"","CSDN","新版本在Github上进行更新"};
         public RecyclerAdapter(Context context){this.context = context;}
         @Override
         public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -117,16 +119,25 @@ public class AboutActivity extends AppCompatActivity {
             switch (position)
             {
                 case 0:
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+                    builder.setMessage(context.getString(R.string.about));
+                    builder.setTitle("软件协议");
+                    builder.setNegativeButton("确认", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.create().show();
                     break;
                 case 1:
-                    break;
-                case 2:
-                    uri = Uri.parse("https://github.com/huanjinzi/campusmvp");
+                    uri = Uri.parse("http://blog.csdn.net/qq_25923235");
                     intent = new Intent(Intent.ACTION_VIEW,uri);
                     startActivity(intent);
                     break;
-                case 3:
-                    uri = Uri.parse("http://blog.csdn.net/qq_25923235");
+                case 2:
+                    uri = Uri.parse("https://github.com/huanjinzi/campusmvp");
                     intent = new Intent(Intent.ACTION_VIEW,uri);
                     startActivity(intent);
                     break;

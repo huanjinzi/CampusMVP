@@ -20,8 +20,12 @@ public class LogConstants {
 
     public static final String USERNAME = "USERNAME";
     public static final String PASSWORD = "PASSWORD";
+    public static final String HAS_COUNT = "HAS_COUNT";
+    public static final String EX_COUNT = "EX_COUNT";
+    //EX_COUNT
 
-    public static final String NETWORK_ERROR_STR = "网络错误，请稍后再登陆!";
+
+    public static final String NETWORK_ERROR_STR = "网络错误，重启wifi试试，说不定就能连上！";
     public static final String LOGOUT_FAIL_STR = "退出账号失败，请稍后再试!";
     public static final String LOGOUT_SUCCESS_STR = "账号退出成功!";
     public static final String LOGIN_SUCCESS_STR = "账号登录成功!";

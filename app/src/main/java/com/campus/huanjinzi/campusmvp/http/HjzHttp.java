@@ -36,16 +36,17 @@ public class HjzHttp implements IHjzHttp {
 
             /*判断请求是否需要cookie，需要在setRequestMethod("POST")之前*/
             if (cookie.length() != 0) {
-                System.out.println(cookie);
                 con.setRequestProperty("Cookie",cookie.toString());
             }
             con.setRequestProperty("Connection", "keep-alive");
             con.setRequestMethod("POST");
-            con.setReadTimeout(10 * 1000);
-            con.setConnectTimeout(10 * 1000);
+            con.setReadTimeout(7 * 1000);
+            con.setConnectTimeout(7 * 1000);
 
             con.setDoOutput(true);
             con.setDoInput(true);
+
+            con.connect();
 
             os = con.getOutputStream();
             if (params.getForm() != null) {
@@ -55,11 +56,19 @@ public class HjzHttp implements IHjzHttp {
             if (con.getResponseCode() == 200) {
 
                 if(con.getHeaderFields().get("Set-Cookie") != null){
-                cookie.append(";"+con.getHeaderFields().get("Set-Cookie").get(0));}
-                in = con.getInputStream();
+                    if(cookie.length() < 2){
+                        cookie.append(con.getHeaderFields().get("Set-Cookie").get(0));
+                    }
+                    else {
+                        cookie.append(";"+con.getHeaderFields().get("Set-Cookie").get(0));
+                    }
+
+                }
+                    in = con.getInputStream();
             }
 
-        } finally {
+        }
+        finally {
             if (os != null) {
                 os.close();
             }

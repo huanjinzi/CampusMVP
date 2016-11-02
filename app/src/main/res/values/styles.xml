@@ -3,14 +3,12 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="dropDownListViewStyle">@style/EditTextTheme</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="LogActivity" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="dropDownListViewStyle">@style/EditTextTheme</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/GREEN_100</item>
     </style>
@@ -20,9 +18,6 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="EditTextTheme" parent="@style/Base.V7.Widget.AppCompat.EditText">
-        <item name="android:background">@drawable/bg_edittext</item>
-    </style>
     <style name="Swu_Theme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>

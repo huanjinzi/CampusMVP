@@ -2,11 +2,8 @@ package com.campus.huanjinzi.campusmvp.InfoTask;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.campus.huanjinzi.campusmvp.R;
-import com.campus.huanjinzi.campusmvp.SwuTask.SwuActivity;
 import com.campus.huanjinzi.campusmvp.data.StudentInfo.DataBean.GetDataResponseBean.ReturnBean.BodyBean.ItemsBean;
 import com.campus.huanjinzi.campusmvp.utils.Hlog;
 
@@ -41,17 +37,11 @@ public class InfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Hlog.i("SWU","info"+getTaskId());
-        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        for (ActivityManager.AppTask task:
-                am.getAppTasks() ) {
-            Hlog.i("SWU", ""+task.getTaskInfo().baseActivity);
-        }
         setContentView(R.layout.activity_info);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         toolbar.setTitleTextAppearance(this, R.style.TitleText);
-        toolbar.setTitle(getIntent().getExtras().getString("title"));
+        toolbar.setTitle(getIntent().getExtras().getString(getResources().getString(R.string.TITLE)));
         setSupportActionBar(toolbar);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -100,7 +90,6 @@ public class InfoActivity extends AppCompatActivity {
                             v.setBackgroundColor(Color.WHITE);
                             break;
                         case  MotionEvent.ACTION_UP:
-                            //Snackbar.make(v,"test"+position,Snackbar.LENGTH_LONG).show();
                             v.setBackgroundColor(Color.WHITE);
                             break;
                     }
@@ -113,8 +102,6 @@ public class InfoActivity extends AppCompatActivity {
             else {
                 switch (position)
                 {
-                    //"姓名","性别","学号","民族","政治面貌","籍贯","生日","身份证","电话号码",
-                    //"入学日期","班级","专业","学院"
                     case 0:
                         holder.getContent().setText(info.getXm());
                         break;
@@ -147,6 +134,7 @@ public class InfoActivity extends AppCompatActivity {
                         break;
 
                 }
+
                 holder.getTitle().setText(title[position]);
             }
             if(position == title.length - 1){holder.getDivider().setVisibility(GONE);}
@@ -191,11 +179,5 @@ public class InfoActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(0,android.R.anim.slide_out_right);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Hlog.i("SWU", ""+"info-Destroy()");
     }
 }
