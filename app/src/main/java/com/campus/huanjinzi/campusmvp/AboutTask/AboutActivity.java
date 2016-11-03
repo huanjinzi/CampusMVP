@@ -5,14 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.support.design.widget.Snackbar;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,29 +19,42 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.campus.huanjinzi.campusmvp.InfoTask.InfoActivity;
-import com.campus.huanjinzi.campusmvp.InfoTask.InfoPresenter;
 import com.campus.huanjinzi.campusmvp.R;
-import com.campus.huanjinzi.campusmvp.SwuTask.SwuActivity;
-import com.campus.huanjinzi.campusmvp.data.StudentInfo;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 import static android.view.View.GONE;
 import static android.view.View.generateViewId;
 
 public class AboutActivity extends AppCompatActivity {
+    
+    @InjectView(R.id.toolbar)
+    Toolbar toolbar;
 
-    private RecyclerView recycler;
+    @InjectView(R.id.layout_content)
+    RelativeLayout content;
+    
+    @InjectView(R.id.recyclerview)
+    RecyclerView recycler;
+
     private RecyclerAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        ButterKnife.inject(this);
+        setToolbar();
+        initView();
+    }
+
+    private void setToolbar() {
+
         toolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         toolbar.setTitleTextAppearance(this, R.style.TitleText);
         toolbar.setTitle(getIntent().getExtras().getString(getString(R.string.TITLE)));
         setSupportActionBar(toolbar);
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,62 +62,65 @@ public class AboutActivity extends AppCompatActivity {
                 overridePendingTransition(0,android.R.anim.slide_out_right);
             }
         });
-
-        RelativeLayout content = (RelativeLayout) findViewById(R.id.layout_content);
+    }
+    
+    private void initView()
+    {
         content.setPadding(0,0,0,0);
 
-        recycler = (RecyclerView) findViewById(R.id.recyclerview);
-
         /**image view parent*/
-        RelativeLayout content1 = new RelativeLayout(this);
-        content1.setId(generateViewId());
-        RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        params2.addRule(RelativeLayout.ABOVE,recycler.getId());
-        content1.setLayoutParams(params2);
+        RelativeLayout image_parent = new RelativeLayout(this);
+        image_parent.setId(generateViewId());
+        RelativeLayout.LayoutParams image_parent_params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        image_parent_params.addRule(RelativeLayout.ABOVE,recycler.getId());
+        image_parent.setLayoutParams(image_parent_params);
 
 
         /**image view*/
-        ImageView imageview = new ImageView(this);
-        imageview.setImageResource(R.mipmap.ac_black);
-        imageview.setId(generateViewId());
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        params.addRule(RelativeLayout.CENTER_VERTICAL);
+        ImageView image = new ImageView(this);
+        image.setImageResource(R.mipmap.ac_black);
+        image.setId(generateViewId());
+        
+        RelativeLayout.LayoutParams image_params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        image_params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        image_params.addRule(RelativeLayout.CENTER_VERTICAL);
 
         /**recycler view*/
-        RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) recycler.getLayoutParams();
-        params1.addRule(RelativeLayout.CENTER_VERTICAL);
+        RelativeLayout.LayoutParams recycler_params = (RelativeLayout.LayoutParams) recycler.getLayoutParams();
+        recycler_params.addRule(RelativeLayout.CENTER_VERTICAL);
 
         RelativeLayout author_parent = new RelativeLayout(this);
-        RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        params3.addRule(RelativeLayout.BELOW,recycler.getId());
-        TextView textView = new TextView(this);
-        textView.setTextSize(13);
-        textView.setText("design by huanjinzi");
-        //textView.setTextColor(getResources().getColor(R.color.GREEN));
-        textView.setId(generateViewId());
-        RelativeLayout.LayoutParams params4 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params4.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        params4.addRule(RelativeLayout.CENTER_VERTICAL);
+        RelativeLayout.LayoutParams author_parent_params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        author_parent_params.addRule(RelativeLayout.BELOW,recycler.getId());
 
-        author_parent.addView(textView,params4);
+        TextView author = new TextView(this);
 
-        content1.addView(imageview,params);
-        content.addView(content1);
-        content.addView(author_parent,params3);
+        author.setTextSize(getResources().getInteger(R.integer.text_size_13));
+        author.setText(getResources().getString(R.string.design_by));
+
+        author.setId(generateViewId());
+        RelativeLayout.LayoutParams author_params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        author_params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        author_params.addRule(RelativeLayout.CENTER_VERTICAL);
+
+        author_parent.addView(author,author_params);
+
+        image_parent.addView(image,image_params);
+        content.addView(image_parent);
+        content.addView(author_parent,author_parent_params);
 
 
 
         recycler.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         adapter = new RecyclerAdapter(this);
         recycler.setAdapter(adapter);
-
     }
-
+    
     class RecyclerAdapter extends RecyclerView.Adapter<Holder> {
         private Context context;
-        private String[] title = {"软件协议","作者博客","项目地址"};
-        private String[] content = {"","CSDN","新版本在Github上进行更新"};
+        private String[] title = getResources().getStringArray(R.array.title);
+        private String[] content = getResources().getStringArray(R.array.content);
+
         public RecyclerAdapter(Context context){this.context = context;}
         @Override
         public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -122,8 +136,8 @@ public class AboutActivity extends AppCompatActivity {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                     builder.setMessage(context.getString(R.string.about));
-                    builder.setTitle("软件协议");
-                    builder.setNegativeButton("确认", new DialogInterface.OnClickListener() {
+                    builder.setTitle(title[0]);
+                    builder.setNegativeButton(getResources().getString(R.string.OK), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
@@ -132,12 +146,12 @@ public class AboutActivity extends AppCompatActivity {
                     builder.create().show();
                     break;
                 case 1:
-                    uri = Uri.parse("http://blog.csdn.net/qq_25923235");
+                    uri = Uri.parse(getResources().getString(R.string.csdn_url));
                     intent = new Intent(Intent.ACTION_VIEW,uri);
                     startActivity(intent);
                     break;
                 case 2:
-                    uri = Uri.parse("https://github.com/huanjinzi/campusmvp");
+                    uri = Uri.parse(getResources().getString(R.string.github_url));
                     intent = new Intent(Intent.ACTION_VIEW,uri);
                     startActivity(intent);
                     break;
