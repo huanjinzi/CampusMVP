@@ -1,10 +1,10 @@
 
 **更新日志**
 
- [2016-11-02]
+ [2016-11-02] <br>
  -由于校园网认证升级，修改认证方式
  
-[**点击下载**](https://github.com/huanjinzi/CampusMVP/blob/develop/apk/)
+[**点击下载**](http://pan.baidu.com/s/1hrMZs4O)
 
 # 1.校园网一键登陆和退出
 
