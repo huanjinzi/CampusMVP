@@ -1,11 +1,16 @@
 
+下载地址:[**百度网盘**](http://pan.baidu.com/s/1hrMZs4O) [**GITHUB**](https://github.com/huanjinzi/CampusMVP/tree/master/apk)<br>
+
 **更新日志**
 
  [v1.0.2] 2016-11-02<br>
  
  -由于校园网认证升级，修改认证方式 <br>
  
-百度云网盘:[**点击下载**](http://pan.baidu.com/s/1hrMZs4O)
+
+**有什么问题或建议，欢迎提出！**<br>
+
+联系方式:<br>**QQ:896458481**
 
 # 1.校园网一键登陆和退出
 
@@ -47,7 +52,4 @@
 > **成绩分学年展示**
 
 ![5](https://github.com/huanjinzi/CampusMVP/blob/master/picture/5.png)
-
-**有什么问题或建议，欢迎提出！**<br>
-**QQ:896458481**
 
