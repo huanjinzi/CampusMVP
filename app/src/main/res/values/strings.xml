@@ -45,4 +45,20 @@
         \n
 
     </string>
+
+    <string name="design_by">design by huanjinzi</string>
+    <string name="csdn_url">http://blog.csdn.net/qq_25923235</string>
+    <string name="github_url">https://github.com/huanjinzi/campusmvp</string>
+
+    <string-array name="title">
+        <item>软件协议</item>
+        <item>作者博客</item>
+        <item>项目地址</item>
+    </string-array>
+
+    <string-array name="content">
+        <item> </item>
+        <item>CSDN</item>
+        <item>新版本在Github上进行更新</item>
+    </string-array>
 </resources>

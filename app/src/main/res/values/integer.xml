@@ -3,4 +3,5 @@
     <!--app常用字段-->
     <integer name="BUTTON">0</integer>
     <integer name="TITLE">1</integer>
+    <integer name="text_size_13">13</integer>
 </resources>
