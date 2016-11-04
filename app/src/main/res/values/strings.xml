@@ -57,8 +57,8 @@
     </string-array>
 
     <string-array name="content">
-        <item> </item>
+        <item>当前版本1.0.3</item>
         <item>CSDN</item>
-        <item>新版本在Github上进行更新</item>
+        <item>获取新版本</item>
     </string-array>
 </resources>
