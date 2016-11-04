@@ -30,11 +30,11 @@ public class SwuWifiLandTask {
 
     public LoginBean login(String username, String password, String validcode) throws Exception {
         //http://123.123.123.123/
-        params.setUrl("http://www.baidu.com");
+        params.setUrl("http://cn.bing.com/");
         InputStream in = HjzHttp.getInstance().get(params);
         StringBuilder sb = HjzStreamReader.getString(in);
 
-        if (sb.toString().contains("百度一下"))
+        if (sb.toString().contains("必应"))
         {
             LoginBean login = new LoginBean();
             login.setResult("success");

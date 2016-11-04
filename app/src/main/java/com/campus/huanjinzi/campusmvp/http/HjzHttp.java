@@ -40,8 +40,8 @@ public class HjzHttp implements IHjzHttp {
             }
             con.setRequestProperty("Connection", "keep-alive");
             con.setRequestMethod("POST");
-            con.setReadTimeout(7 * 1000);
-            con.setConnectTimeout(7 * 1000);
+            con.setReadTimeout(20 * 1000);
+            con.setConnectTimeout(20 * 1000);
 
             con.setDoOutput(true);
             con.setDoInput(true);
@@ -89,9 +89,11 @@ public class HjzHttp implements IHjzHttp {
 
         }
 
+        //Mozilla/5.0 (Linux; Android 5.1.1; NX529J Build/LMY47V) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.68 Mobile Safari/537.36
+        con.setRequestProperty("User-Agent","Mozilla/5.0 (Linux; Android 5.1.1; NX529J Build/LMY47V) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.68 Mobile Safari/537.36");
         con.setRequestMethod("GET");
-        con.setReadTimeout(5 * 1000);
-        con.setConnectTimeout(5 * 1000);
+        con.setReadTimeout(20 * 1000);
+        con.setConnectTimeout(20 * 1000);
 
         con.setDoInput(true);
         con.connect();

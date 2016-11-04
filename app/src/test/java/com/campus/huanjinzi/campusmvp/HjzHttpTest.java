@@ -128,9 +128,9 @@ public class HjzHttpTest {
     public void get() throws Exception {
         HjzHttp hjz = HjzHttp.getInstance();
         Params params = Params.getInstance();
-        params.setUrl("http://www.swu.edu.cn");
+        params.setUrl("http://cn.bing.com/");
         InputStream in = hjz.get(params);
-        StringBuilder sb = HjzStreamReader.getString(in, "gb2312");
+        StringBuilder sb = HjzStreamReader.getString(in);
         System.out.println(sb);
 
     }

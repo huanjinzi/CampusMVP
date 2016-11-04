@@ -259,5 +259,4 @@ public class ExcelView extends View {
         excel_h += 3 * rowh[0];
         return excel_h;
     }
-
 }
