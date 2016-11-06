@@ -1,6 +1,5 @@
 package com.campus.huanjinzi.campusmvp.InfoTask;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,7 +15,9 @@ import android.widget.TextView;
 
 import com.campus.huanjinzi.campusmvp.R;
 import com.campus.huanjinzi.campusmvp.data.StudentInfo.DataBean.GetDataResponseBean.ReturnBean.BodyBean.ItemsBean;
-import com.campus.huanjinzi.campusmvp.utils.Hlog;
+import com.campus.huanjinzi.campusmvp.data.StudentInfoSort;
+
+import java.lang.reflect.Field;
 
 import static android.view.View.GONE;
 
@@ -69,6 +70,8 @@ public class InfoActivity extends AppCompatActivity {
         "入学日期","班级","专业","学院"};
         private String[] content = {"姓名","性别","民族","生日","身份证","电话号码",
                 "入学日期","班级","专业","学院"};
+        private Field[] fields = StudentInfoSort.get();
+
         public RecyclerAdapter(Context context){this.context = context;}
         @Override
         public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -100,41 +103,16 @@ public class InfoActivity extends AppCompatActivity {
             holder.getTitle().setText(title[position]);
             holder.getContent().setText(content[position]);}
             else {
-                switch (position)
+
+                if(fields[position].getType() == String.class)
                 {
-                    case 0:
-                        holder.getContent().setText(info.getXm());
-                        break;
-                    case 1:
-                        holder.getContent().setText(info.getXb());
-                        break;
-                    case 2:
-                        holder.getContent().setText(info.getMz());
-                        break;
-                    case 3:
-                        holder.getContent().setText(info.getCsrq());
-                        break;
-                    case 4:
-                        holder.getContent().setText(info.getZjh());
-                        break;
-                    case 5:
-                        holder.getContent().setText(info.getDh());
-                        break;
-                    case 6:
-                        holder.getContent().setText(info.getRxsj());
-                        break;
-                    case 7:
-                        holder.getContent().setText(info.getBj());
-                        break;
-                    case 8:
-                        holder.getContent().setText(info.getZy());
-                        break;
-                    case 9:
-                        holder.getContent().setText(info.getYx());
-                        break;
-
+                    fields[position].setAccessible(true);
+                    try {
+                        holder.getContent().setText(fields[position].get(info).toString());
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
                 }
-
                 holder.getTitle().setText(title[position]);
             }
             if(position == title.length - 1){holder.getDivider().setVisibility(GONE);}

@@ -1,5 +1,6 @@
 package com.campus.huanjinzi.campusmvp.data;
 
+import com.campus.huanjinzi.campusmvp.annotation.Order;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
@@ -147,25 +148,33 @@ public class StudentInfo {
                     }
 
                     public static class ItemsBean implements Serializable{
+                        //{"姓名","性别","民族","生日","身份证","电话号码","入学日期","班级","专业","学院"};
+
+
+                        @Order(1)private String xm;
+                        @Order(2)private String xb;
+                        @Order(3)private String mz;
+                        @Order(4)private String csrq;
+                        @Order(5)private String zjh;
+
+                        @Order(7)private String rxsj;
+                        @Order(8)private String bj;
+                        @Order(9)private String zy;
+                        @Order(10)private String yx;
+
+                        @Order(6)private String dh;
+
                         private String id;
-                        private String xm;
-                        private String mz;
-                        private String xb;
                         private String zzmmm;
                         private String zjlxdm;
-                        private String zjh;
-                        private String csrq;
                         private String jgdm;
                         private String lb;
-                        private String dh;
                         private String xjzt;
-                        private String rxsj;
-                        private String bj;
-                        private String zy;
-                        private String yx;
+
                         private List<?> xmpy;
                         private List<?> csddm;
                         private List<?> email;
+
 
                         public static ItemsBean objectFromData(String str) {
 
