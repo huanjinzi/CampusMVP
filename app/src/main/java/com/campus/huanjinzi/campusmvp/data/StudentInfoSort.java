@@ -1,7 +1,7 @@
 package com.campus.huanjinzi.campusmvp.data;
 
 import com.campus.huanjinzi.campusmvp.annotation.Order;
-import com.campus.huanjinzi.campusmvp.data.StudentInfo;
+import com.campus.huanjinzi.campusmvp.data.StudentInfo.DataBean.GetDataResponseBean.ReturnBean.BodyBean.ItemsBean;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class StudentInfoSort {
     public static Field[] get()
     {
-        Class bean = StudentInfo.DataBean.GetDataResponseBean.ReturnBean.BodyBean.ItemsBean.class;
+        Class bean = ItemsBean.class;
         Field[] fields = bean.getDeclaredFields();
         ArrayList<Field> dst = new ArrayList(10);
         Field[] sort = new Field[10];
